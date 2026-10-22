@@ -1,0 +1,186 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.AutoSelectSettingWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="{x:Static resx:ResUI.AutoSelectTitle}"
+    Width="560"
+    Height="480"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterScreen"
+    x:DataType="vms:AutoSelectSettingViewModel"
+    mc:Ignorable="d">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel
+            Margin="{StaticResource Margin4}"
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button
+                x:Name="btnSave"
+                MinWidth="100"
+                Content="{x:Static resx:ResUI.TbConfirm}"
+                IsDefault="True" />
+            <Button
+                x:Name="btnCancel"
+                MinWidth="100"
+                Margin="{StaticResource MarginLr8}"
+                Content="{x:Static resx:ResUI.TbCancel}"
+                IsCancel="True" />
+        </StackPanel>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid
+                Margin="{StaticResource Margin4}"
+                ColumnDefinitions="Auto,*,Auto"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvEnabled}" />
+                <ToggleSwitch
+                    x:Name="togEnabled"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvInterval}" />
+                <ComboBox
+                    x:Name="cmbInterval"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    DisplayMemberBinding="{Binding Name}"
+                    ItemsSource="{Binding IntervalItems}"
+                    SelectedItem="{Binding SelectedInterval}" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvStrategy}" />
+                <ComboBox
+                    x:Name="cmbStrategy"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="220"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    DisplayMemberBinding="{Binding Name}"
+                    ItemsSource="{Binding StrategyItems}"
+                    SelectedItem="{Binding SelectedStrategy}" />
+
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvTestType}" />
+                <ComboBox
+                    x:Name="cmbTestType"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Width="220"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    DisplayMemberBinding="{Binding Name}"
+                    ItemsSource="{Binding TestTypeItems}"
+                    SelectedItem="{Binding SelectedTestType}" />
+
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvOnlySwitchIfBetter}" />
+                <ToggleSwitch
+                    x:Name="togOnlySwitchIfBetter"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvMaxDelay}" />
+                <NumericUpDown
+                    x:Name="numMaxDelay"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    FormatString="0"
+                    Minimum="0"
+                    Maximum="60000"
+                    Increment="10" />
+
+                <TextBlock
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvSwitchTolerance}" />
+                <NumericUpDown
+                    x:Name="numSwitchTolerance"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    FormatString="0"
+                    Minimum="0"
+                    Maximum="60000"
+                    Increment="5" />
+
+                <TextBlock
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvAllSubscriptions}" />
+                <ToggleSwitch
+                    x:Name="togAllSubscriptions"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+
+                <TextBlock
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.AutoSelectLvSelectOnStartup}" />
+                <ToggleSwitch
+                    x:Name="togSelectOnStartup"
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

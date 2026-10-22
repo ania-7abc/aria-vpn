@@ -1,0 +1,149 @@
+# AriaVPN — development notes
+
+AriaVPN is a fork of [v2rayN](https://github.com/2dust/v2rayN) (GPL-3.0,
+Avalonia / .NET 10). The `.deb` package is called `aria-vpn`.
+
+Status: the feature is implemented and tested (unit tests + an integration run
+in the real GUI); the `.deb` package is built by `package-aria-vpn.sh`.
+
+## Environment
+
+* .NET SDK 10 (`dotnet-install.sh` is enough, no root required).
+* If the network has broken IPv6, set `DOTNET_SYSTEM_NET_DISABLEIPV6=1`,
+  otherwise NuGet restore can hang on SYN-SENT.
+
+```bash
+export DOTNET_ROOT="$HOME/.dotnet"
+export PATH="$DOTNET_ROOT:$PATH"
+export DOTNET_SYSTEM_NET_DISABLEIPV6=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+```
+
+## Commands
+
+```bash
+# build the GUI
+cd v2rayN
+dotnet build v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
+
+# unit tests of the selection logic (10 scenarios)
+dotnet run --project v2rayN.Tests/AriaVPN.Tests.csproj -c Release
+
+# publish + build the .deb
+cd ..
+./package-aria-vpn.sh 7.25.6 --cores /opt/AriaVPN/bin
+
+# rebuild only the .deb from the existing publish output
+./package-aria-vpn.sh 7.25.6 --no-publish --cores /opt/AriaVPN/bin
+```
+
+## Auto selection
+
+### Configuration
+
+`AutoSelectItem` in `ServiceLib/Models/Configs/ConfigItems.cs`:
+
+| Field | Meaning |
+|---|---|
+| `Enabled` | the loop is running |
+| `IntervalMinutes` | pause between measurements (1–1440) |
+| `TestType` | `Tcping`, `Realping`, `UdpTest` or `Mixedtest` |
+| `Strategy` | `LeastPing`, `Fastest`, `Random`, `Fallback` |
+| `OnlySwitchIfBetter` | keep the current server unless the new one is better by `SwitchTolerance` ms |
+| `MaxDelay` | ignore servers slower than this (0 = no limit) |
+| `AllSubscriptions` | measure all subscriptions or only the current one |
+| `SelectOnStartup` | run a measurement right after start-up |
+
+Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
+
+### Service
+
+`ServiceLib/Services/AutoSelectService.cs`:
+
+* `Init(config)`, `StartLoop()`, `StopLoop()`, `SetEnabledAsync(bool)`.
+* The loop waits 15 seconds, then runs a measurement and repeats every
+  `IntervalMinutes`.
+* Measurements use the existing `SpeedtestService.RunLoop(testType, profiles)`.
+* `SelectBestServer(candidates, delays, speeds, option, currentIndexId)` is a
+  pure static function — all selection rules live there and are covered by the
+  tests.
+* On a change it calls `ConfigHandler.SetDefaultServerIndex()` and raises
+  `AppEvents.AutoSelectServerChangedRequested`; `MainWindowViewModel` then
+  refreshes the server list and calls `Reload()`, which restarts the core with
+  the new server.
+* Every run writes one log line with all measured delays and the decision.
+
+### UI
+
+* `AutoSelectView.axaml` — a card in the top bar of the main window: toggle,
+  status, current server with its delay, "select the best now" and "settings".
+* `AutoSelectSettingWindow.axaml` — interval, strategy, test type and the
+  advanced switches.
+* `MainWindow.axaml` also has an "Auto server selection..." item in the
+  settings menu.
+* Strings live in `ServiceLib/Resx/ResUI.resx`; the UI is English-only.
+
+## Branding
+
+* `AssemblyName=AriaVPN`, the executable is `AriaVPN`.
+* `Global.AppName = "AriaVPN"` — used by window captions, the tray tooltip,
+  autostart entries and the log header.
+* `ServiceLib/Global.cs`: `AvaAssets = "avares://AriaVPN/Assets/"`.
+  This is critical: the `avares` URI contains the assembly name, so after the
+  rename the old `avares://v2rayN/...` stops resolving and the app crashes with
+  `Could not create glyphTypeface. Font family: Inter`.
+* Icons: `Assets/AriaVPN.ico`, `AriaVPN.png`, `AriaVPN.icns`.
+* The application does not update itself from the upstream v2rayN releases
+  (`CoreInfoManager.IsCheckUpdateSupported`); updates are delivered through the
+  package.
+
+## Packaging
+
+`package-aria-vpn.sh`:
+
+* publishes a self-contained single-file binary for `linux-x64`;
+* copies the cores (`xray`, `sing-box`, `srss`, geo files);
+* installs to `/opt/AriaVPN`, adds `/usr/bin/aria-vpn`, a desktop entry and the
+  icon;
+* builds the package with `dpkg-deb`.
+
+Because `/opt/AriaVPN` is owned by root, the launcher sets
+`V2RAYN_LOCAL_APPLICATION_DATA_V2=1` when the directory is not writable. The
+application then keeps its configuration, logs and cores in
+`~/.local/share/AriaVPN` and copies `bin` there on the first run
+(`CoreManager`).
+
+## Implementation details worth knowing
+
+* `SpeedtestService.RunLoop` reports results through a callback with string
+  fields. For TCP ping the delay is in whole milliseconds and **0 is valid**
+  (loopback); unreachable servers are `-1`.
+* Progress messages such as `Speedtesting` must be dropped with
+  `int.TryParse`, not `ToInt()` (which returns 0).
+* `ProfileItem.CoreType` must match the core (`ECoreType.Xray = 2` for
+  SOCKS/VMess/...), otherwise `GetTestBatchItem` skips the profile.
+* `NoticeManager.Instance.Enqueue()` can be called from a background thread.
+* Theme: Semi.Avalonia (`CardBorder`, `SimpleToggleSwitch`, `Classes="Success"`,
+  `SemiIconBolt`).
+
+## Testing
+
+* `v2rayN.Tests` — 10 scenarios of `SelectBestServer`: strategies, unreachable
+  servers, a 0 ms server, `MaxDelay`, `OnlySwitchIfBetter`, the improvement
+  threshold and the "switched" flag.
+* Integration test in the real GUI: three profiles (two live TCP listeners and
+  one dead port), TCP ping, `LeastPing`. Expected log line:
+
+  ```
+  AutoSelectService: measured 2 of 3 servers [...], selected fast-1 (1 ms), switched=True
+  ```
+
+  The active server in the config changes and the core is restarted with the
+  selected server as its outbound.
+
+## Known limitations
+
+* Core updates from the GUI are disabled in a packaged installation
+  (`IsPackagedInstall()`); the cores are updated together with the package.
+* `MaxDelay` and `SwitchTolerance` are edited as `decimal` in the settings and
+  stored as `int`.
