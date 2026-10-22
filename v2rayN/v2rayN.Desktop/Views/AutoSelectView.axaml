@@ -10,12 +10,16 @@
     d:DesignWidth="460"
     x:DataType="vms:AutoSelectViewModel"
     mc:Ignorable="d">
+    <UserControl.Styles>
+        <Style Selector="Ellipse.statusDot">
+            <Setter Property="Fill" Value="{DynamicResource SemiColorText3}" />
+        </Style>
+        <Style Selector="Ellipse.statusDot.active">
+            <Setter Property="Fill" Value="{DynamicResource SemiColorSuccess}" />
+        </Style>
+    </UserControl.Styles>
 
-    <Border
-        Margin="0,0,8,0"
-        Padding="12,6"
-        VerticalAlignment="Center"
-        Theme="{DynamicResource CardBorder}">
+    <Border Padding="12,6" VerticalAlignment="Center" Theme="{DynamicResource CardBorder}">
         <StackPanel Orientation="Horizontal" Spacing="10">
 
             <StackPanel
@@ -39,21 +43,33 @@
             <Border
                 Width="1"
                 Margin="0,4"
-                Background="{DynamicResource ButtonDefaultBorderBrush}" />
+                Background="{DynamicResource SemiColorBorder}" />
 
             <StackPanel
                 MinWidth="150"
                 MaxWidth="260"
+                Spacing="1"
                 VerticalAlignment="Center">
-                <TextBlock
-                    x:Name="txtStatus"
-                    FontSize="11"
-                    Opacity="0.75"
-                    Text="{Binding StatusText}"
-                    TextTrimming="CharacterEllipsis" />
+                <StackPanel
+                    Orientation="Horizontal"
+                    Spacing="6"
+                    VerticalAlignment="Center">
+                    <Ellipse
+                        Width="7"
+                        Height="7"
+                        VerticalAlignment="Center"
+                        Classes.active="{Binding Enabled}"
+                        Classes="statusDot" />
+                    <TextBlock
+                        x:Name="txtStatus"
+                        FontSize="11"
+                        Opacity="0.8"
+                        Text="{Binding StatusText}"
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
                 <TextBlock
                     x:Name="txtCurrentServer"
-                    FontSize="11"
+                    FontSize="12"
                     FontWeight="SemiBold"
                     Text="{Binding CurrentServerText}"
                     TextTrimming="CharacterEllipsis" />

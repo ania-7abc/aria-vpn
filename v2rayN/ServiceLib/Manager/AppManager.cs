@@ -8,6 +8,7 @@ public sealed class AppManager
     private Config _config;
     private int? _statePort;
     private int? _statePort2;
+    private int? _apiPort;
     public static AppManager Instance => _instance.Value;
     public Config Config => _config;
     public IWindowDialog WindowDialog { get; set; } = null!;
@@ -27,6 +28,19 @@ public sealed class AppManager
         {
             _statePort2 ??= Utils.GetFreePort(GetLocalPort(EInboundProtocol.api2));
             return _statePort2.Value + (_config.TunModeItem.EnableTun ? 1 : 0);
+        }
+    }
+
+    /// <summary>
+    /// Local port of the Xray gRPC API (HandlerService + RoutingService).
+    /// It is used for switching the active outbound without restarting the core.
+    /// </summary>
+    public int ApiPort
+    {
+        get
+        {
+            _apiPort ??= Utils.GetFreePort(GetLocalPort(EInboundProtocol.mixed) + 1);
+            return _apiPort.Value;
         }
     }
 
@@ -103,6 +117,7 @@ public sealed class AppManager
         //First determine the port value
         _ = StatePort;
         _ = StatePort2;
+        _ = ApiPort;
 
         Task.Run(async () =>
         {
@@ -116,6 +131,7 @@ public sealed class AppManager
     {
         _statePort = null;
         _statePort2 = null;
+        _apiPort = null;
         return true;
     }
 

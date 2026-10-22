@@ -33,10 +33,11 @@
         </StackPanel>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid
-                Margin="{StaticResource Margin4}"
-                ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <Border Padding="12" Theme="{DynamicResource CardBorder}">
+                <Grid
+                    Margin="{StaticResource Margin4}"
+                    ColumnDefinitions="Auto,*,Auto"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
 
                 <TextBlock
                     Grid.Row="0"
@@ -180,7 +181,8 @@
                     Margin="{StaticResource Margin4}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center" />
-            </Grid>
+                </Grid>
+            </Border>
         </ScrollViewer>
     </DockPanel>
 </Window>

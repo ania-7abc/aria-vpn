@@ -107,7 +107,7 @@
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 Classes.InsetContent="True"
-                GridLinesVisibility="All"
+                GridLinesVisibility="Horizontal"
                 HeadersVisibility="All"
                 IsReadOnly="True"
                 ItemsSource="{Binding ProfileItems}">

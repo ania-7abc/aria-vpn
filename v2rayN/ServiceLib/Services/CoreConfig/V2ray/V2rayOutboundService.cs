@@ -12,6 +12,14 @@ public partial class CoreConfigV2rayService
             GenObservatory(multipleLoad);
             GenBalancer(multipleLoad);
         }
+        else if (proxyOutboundList.Count == 1
+                 && _coreConfig.routing.balancers?.Any(b => b.tag == Global.ProxyTag + Global.BalancerTagSuffix) != true)
+        {
+            // A single-outbound balancer is the anchor for a hot server switch:
+            // the auto selection service overrides its target via the Xray API
+            // instead of restarting the core and dropping all connections.
+            GenBalancer(EMultipleLoad.Random);
+        }
         if (context.IsTunEnabled)
         {
             _coreConfig.outbounds.Add(BuildDnsOutbound());
@@ -30,6 +38,51 @@ public partial class CoreConfigV2rayService
             proxyOutboundList.Add(BuildProxyOutbound(baseTagName));
         }
         return proxyOutboundList;
+    }
+
+    /// <summary>
+    /// Builds a standalone outbound for the current node. It is used by the Xray
+    /// API to add a new server at runtime, without reloading the whole config.
+    /// </summary>
+    public RetResult GenerateSingleOutboundContent(string tag)
+    {
+        var ret = new RetResult();
+        try
+        {
+            if (_node is null
+                || !_node.IsValid()
+                || _node.ConfigType.IsGroupType()
+                || _node.ConfigType is EConfigType.Custom or EConfigType.Outbound)
+            {
+                ret.Msg = ResUI.CheckServerSettings;
+                return ret;
+            }
+
+            var txtOutbound = EmbedUtils.GetEmbedText(Global.V2raySampleOutbound);
+            var outbound = JsonUtils.Deserialize<Outbounds4Ray>(txtOutbound);
+            if (outbound is null)
+            {
+                ret.Msg = ResUI.FailedGetDefaultConfiguration;
+                return ret;
+            }
+
+            FillOutbound(outbound);
+            outbound.tag = tag;
+
+            ret.Success = true;
+            ret.Msg = string.Format(ResUI.SuccessfulConfiguration, "");
+            ret.Data = JsonUtils.Serialize(new
+            {
+                outbounds = new[] { outbound },
+            });
+            return ret;
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            ret.Msg = ResUI.FailedGenDefaultConfiguration;
+            return ret;
+        }
     }
 
     private List<Outbounds4Ray> BuildGroupProxyOutbounds(string baseTagName = Global.ProxyTag)

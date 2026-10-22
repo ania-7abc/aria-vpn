@@ -10,8 +10,11 @@
     x:DataType="vms:StatusBarViewModel"
     Design.DataContext="{x:Static dd:DesignData.StatusBar}"
     mc:Ignorable="d">
-    <Grid>
-        <DockPanel Margin="{StaticResource Margin8}">
+    <Border
+        Background="{DynamicResource SemiColorFill0}"
+        BorderBrush="{DynamicResource SemiColorBorder}"
+        BorderThickness="0,1,0,0">
+        <DockPanel Margin="8,4">
             <StackPanel
                 Margin="{StaticResource MarginLr8}"
                 VerticalAlignment="Center"
@@ -78,5 +81,5 @@
                 <TextBlock x:Name="txtRunningInfoDisplay" />
             </StackPanel>
         </DockPanel>
-    </Grid>
+    </Border>
 </UserControl>

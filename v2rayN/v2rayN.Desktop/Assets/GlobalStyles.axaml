@@ -6,8 +6,12 @@
     </Design.PreviewWith>
 
     <Style Selector="DataGrid">
-        <Setter Property="RowHeight" Value="24" />
+        <Setter Property="RowHeight" Value="26" />
         <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
     <Style Selector="PathIcon">

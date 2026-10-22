@@ -8,6 +8,7 @@ public class V2rayConfig
     public List<Inbounds4Ray> inbounds { get; set; }
     public List<Outbounds4Ray> outbounds { get; set; }
     public Routing4Ray routing { get; set; }
+    public Api4Ray? api { get; set; }
     public Metrics4Ray? metrics { get; set; }
     public Policy4Ray? policy { get; set; }
     public Stats4Ray? stats { get; set; }
@@ -18,6 +19,15 @@ public class V2rayConfig
 
 public class Stats4Ray
 { }
+
+public class Api4Ray
+{
+    public string? tag { get; set; }
+
+    public string? listen { get; set; }
+
+    public List<string>? services { get; set; }
+}
 
 public class Metrics4Ray
 {

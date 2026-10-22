@@ -69,8 +69,9 @@ Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
   tests.
 * On a change it calls `ConfigHandler.SetDefaultServerIndex()` and raises
   `AppEvents.AutoSelectServerChangedRequested`; `MainWindowViewModel` then
-  refreshes the server list and calls `Reload()`, which restarts the core with
-  the new server.
+  refreshes the server list and asks `CoreManager.TryHotSwitchOutboundAsync()`
+  to switch the running Xray core. When the hot switch is not available it calls
+  `Reload()`, which restarts the core with the new server.
 * Every run writes one log line with all measured delays and the decision.
 
 ### UI
@@ -125,6 +126,31 @@ application then keeps its configuration, logs and cores in
 * `NoticeManager.Instance.Enqueue()` can be called from a background thread.
 * Theme: Semi.Avalonia (`CardBorder`, `SimpleToggleSwitch`, `Classes="Success"`,
   `SemiIconBolt`).
+* Notifications are shown in the bottom-right corner so they do not cover the
+  auto selection card in the top bar.
+
+### Hot server switch (Xray)
+
+A regular reload stops the core and therefore drops every active connection. To
+avoid that, the Xray config always contains a local gRPC API and a
+`proxy-balancer` (also when there is only one outbound). On a server change
+`CoreManager.TryHotSwitchOutboundAsync()`:
+
+1. builds the outbound for the new profile and writes it to a temporary file;
+2. calls `xray api ado --server=127.0.0.1:<ApiPort> <file>` to add the outbound
+   with the stable tag `proxy-hot-<IndexId>` (adding the same tag again is
+   skipped by `CoreManager`);
+3. calls `xray api bo --server=127.0.0.1:<ApiPort> -b proxy-balancer
+   proxy-hot-<IndexId>` to point the balancer at it.
+
+New connections immediately use the new outbound, while connections that are
+already established keep their old one. The API port is allocated next to the
+local mixed port (`AppManager.ApiPort`).
+
+The hot switch is skipped (and the core is restarted) for sing-box and other
+non-Xray cores, custom/outbound/group nodes, fragment modes
+(`EnableFragment`, `EnableFinalFragment`) and an enabled full config template,
+because those cases rewrite or replace the generated config.
 
 ## Testing
 
@@ -138,8 +164,9 @@ application then keeps its configuration, logs and cores in
   AutoSelectService: measured 2 of 3 servers [...], selected fast-1 (1 ms), switched=True
   ```
 
-  The active server in the config changes and the core is restarted with the
-  selected server as its outbound.
+  The active server in the config changes and the Xray balancer is switched to
+  the selected outbound without restarting the core (or the core is restarted
+  when the hot switch is unavailable).
 
 ## Known limitations
 

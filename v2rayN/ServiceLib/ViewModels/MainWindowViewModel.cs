@@ -418,12 +418,20 @@ public partial class MainWindowViewModel : MyReactiveObject
     }
 
     /// <summary>
-    /// The automatic selection has chosen another server, restart the core with it.
+    /// The automatic selection has chosen another server. Prefer a runtime outbound
+    /// switch so existing connections are not dropped, otherwise restart the core.
     /// </summary>
     private async Task AutoSelectServerChangedAsync(string indexId)
     {
         try
         {
+            var node = await AppManager.Instance.GetProfileItem(indexId);
+            if (node is not null && await CoreManager.Instance.TryHotSwitchOutboundAsync(node))
+            {
+                await RefreshServersDispatcherAsync();
+                return;
+            }
+
             await RefreshServersDispatcherAsync();
             await Reload();
         }

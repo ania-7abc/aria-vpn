@@ -14,6 +14,7 @@ public class CoreManager
 
     private ProcessService? _processService;
     private ProcessService? _processPreService;
+    private readonly HashSet<string> _hotOutboundTags = [];
     private bool _linuxSudo = false;
     private Func<bool, string, Task>? _updateFunc;
     private const string _tag = "CoreHandler";
@@ -144,6 +145,87 @@ public class CoreManager
         return await RunProcess(coreInfo, fileName, true, false);
     }
 
+    /// <summary>
+    /// Tries to switch the running Xray core to another server without restarting it.
+    /// The new outbound is registered through the local gRPC API and the proxy balancer
+    /// is pointed at it, so established connections keep using their previous outbound
+    /// instead of being dropped. Returns false when a regular reload is required.
+    /// </summary>
+    public async Task<bool> TryHotSwitchOutboundAsync(ProfileItem? node)
+    {
+        if (!CanHotSwitch(node))
+        {
+            return false;
+        }
+
+        try
+        {
+            var fullConfigTemplate = await AppManager.Instance.GetFullConfigTemplateItem(ECoreType.Xray);
+            if (fullConfigTemplate is { Enabled: true }
+                && (fullConfigTemplate.Config.IsNotEmpty() || fullConfigTemplate.TunConfig.IsNotEmpty()))
+            {
+                return false;
+            }
+
+            var buildResult = await CoreConfigContextBuilder.Build(_config, node!);
+            if (!buildResult.Success || buildResult.Context.Node.ConfigType.IsGroupType())
+            {
+                return false;
+            }
+
+            var hotTag = $"{Global.ProxyTag}-hot-{node!.IndexId}";
+            var result = new CoreConfigV2rayService(buildResult.Context).GenerateSingleOutboundContent(hotTag);
+            if (result.Success != true || result.Data is not string outboundJson)
+            {
+                return false;
+            }
+
+            var coreInfo = CoreInfoManager.Instance.GetCoreInfo(ECoreType.Xray);
+            var coreExec = CoreInfoManager.Instance.GetCoreExecFile(coreInfo, out var msg);
+            if (coreExec.IsNullOrEmpty())
+            {
+                Logging.SaveLog($"{_tag}: {msg}");
+                return false;
+            }
+
+            var outboundFile = Utils.GetBinConfigPath(string.Format(Global.CoreSpeedtestConfigFileName, Utils.GetGuid(false)));
+            try
+            {
+                await File.WriteAllTextAsync(outboundFile, outboundJson);
+
+                var server = $"--server={Global.Loopback}:{AppManager.Instance.ApiPort}";
+                // The same server can be selected again later, when its outbound is already registered.
+                if (_hotOutboundTags.Add(hotTag))
+                {
+                    if (!await RunXrayApiAsync(coreExec, ["api", "ado", server, outboundFile]))
+                    {
+                        _hotOutboundTags.Remove(hotTag);
+                        return false;
+                    }
+                }
+
+                var balancerTag = Global.ProxyTag + Global.BalancerTagSuffix;
+                return await RunXrayApiAsync(coreExec, ["api", "bo", server, "-b", balancerTag, hotTag]);
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(outboundFile);
+                }
+                catch
+                {
+                    // The temporary file is not critical, leave it for the next start.
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            return false;
+        }
+    }
+
     public async Task CoreStop()
     {
         try
@@ -167,6 +249,8 @@ public class CoreManager
                 _processPreService.Dispose();
                 _processPreService = null;
             }
+
+            _hotOutboundTags.Clear();
         }
         catch (Exception ex)
         {
@@ -175,6 +259,25 @@ public class CoreManager
     }
 
     #region Private
+
+    /// <summary>
+    /// Checks whether the current core and node can be switched through the Xray API.
+    /// Fragment modes and full config templates rewrite the generated config, so they
+    /// may remove the API or the balancer that the hot switch relies on.
+    /// </summary>
+    private bool CanHotSwitch(ProfileItem? node)
+    {
+        return _config is not null
+               && node is not null
+               && node.IsValid()
+               && !node.ConfigType.IsGroupType()
+               && node.ConfigType is not (EConfigType.Custom or EConfigType.Outbound)
+               && AppManager.Instance.RunningCoreType == ECoreType.Xray
+               && AppManager.Instance.GetCoreType(node, node.ConfigType) == ECoreType.Xray
+               && _processService is { HasExited: false }
+               && !_config.CoreBasicItem.EnableFragment
+               && !_config.CoreBasicItem.EnableFinalFragment;
+    }
 
     private async Task CoreStart(CoreConfigContext context)
     {
@@ -360,6 +463,74 @@ public class CoreManager
         AddProcessJob(procService.Handle);
 
         return procService;
+    }
+
+    /// <summary>
+    /// Runs a short-lived Xray CLI command (for example <c>xray api bo</c>) and waits for it.
+    /// </summary>
+    private async Task<bool> RunXrayApiAsync(string fileName, IEnumerable<string> arguments)
+    {
+        Process? process = null;
+        try
+        {
+            process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = fileName,
+                    WorkingDirectory = Utils.GetBinPath(""),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                }
+            };
+            foreach (var argument in arguments)
+            {
+                process.StartInfo.ArgumentList.Add(argument);
+            }
+
+            if (!process.Start())
+            {
+                return false;
+            }
+
+            using var cts = new CancellationTokenSource(Global.LocalFetch);
+            var outputTask = process.StandardOutput.ReadToEndAsync(cts.Token);
+            var errorTask = process.StandardError.ReadToEndAsync(cts.Token);
+            try
+            {
+                await process.WaitForExitAsync(cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                try
+                {
+                    process.Kill(true);
+                }
+                catch { }
+                Logging.SaveLog($"{_tag}: xray {string.Join(" ", arguments)} timed out");
+                return false;
+            }
+
+            var output = await outputTask;
+            var error = await errorTask;
+            if (process.ExitCode != 0)
+            {
+                Logging.SaveLog($"{_tag}: xray {string.Join(" ", arguments)} failed ({process.ExitCode}): {output} {error}");
+                return false;
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            return false;
+        }
+        finally
+        {
+            process?.Dispose();
+        }
     }
 
     private void AddProcessJob(nint processHandle)

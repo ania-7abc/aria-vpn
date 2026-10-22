@@ -52,6 +52,8 @@ public partial class CoreConfigV2rayService(CoreConfigContext context)
 
             GenRouting();
 
+            GenApi();
+
             GenDns();
 
             GenStatistic();

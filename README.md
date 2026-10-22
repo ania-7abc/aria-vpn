@@ -23,8 +23,9 @@ regularly, pick the best one and switch to it automatically.
 * **Smart switching** — switch only when the new server is better by a given
   margin, ignore servers above a maximum delay, use all subscriptions or only
   the current one, and pick the best server on start-up.
-* **Transparent** — the active server is switched and the core is restarted
-  automatically; a notification shows what happened.
+* **Transparent** — the active server is switched in the running Xray core, so
+  existing connections are kept; the list and a notification show what happened.
+  When the core cannot switch on the fly, it is restarted instead.
 
 ![Auto selection settings](docs/screenshots/autoselect-settings.png)
 
@@ -33,7 +34,8 @@ regularly, pick the best one and switch to it automatically.
 * Xray and sing-box cores, VLESS / VMess / Trojan / Shadowsocks / SOCKS / HTTP /
   TUIC / Hysteria2 / AnyTLS / WireGuard and more.
 * Subscriptions with automatic updates, routing rules, DNS settings, TUN mode.
-* Automatic core restart on server change, tray menu, dark and light themes.
+* Live server switching for Xray without dropping connections, automatic core
+  restart as a fallback, tray menu, dark and light themes.
 * English user interface.
 
 ## Install (Debian / Ubuntu)
@@ -75,6 +77,7 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the implementation notes.
 | Path | Description |
 |---|---|
 | `v2rayN/ServiceLib/Services/AutoSelectService.cs` | background loop, measurements and the selection itself |
+| `v2rayN/ServiceLib/Manager/CoreManager.cs` | core lifecycle and the Xray hot server switch |
 | `v2rayN/ServiceLib/ViewModels/AutoSelectViewModel.cs` | the card in the main window |
 | `v2rayN/ServiceLib/ViewModels/AutoSelectSettingViewModel.cs` | settings window |
 | `v2rayN/v2rayN.Desktop/Views/AutoSelectView.axaml` | the auto selection card |
