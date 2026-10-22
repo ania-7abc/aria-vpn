@@ -213,6 +213,18 @@ public class AutoSelectItem
     /// Select the best server right after the application start.
     /// </summary>
     public bool SelectOnStartup { get; set; } = true;
+
+    /// <summary>
+    /// Keep the active server at the best measured one by re-checking the servers
+    /// all the time. The switch is done through the Xray API, so established
+    /// connections are not interrupted.
+    /// </summary>
+    public bool ContinuousMode { get; set; }
+
+    /// <summary>
+    /// How often (in seconds) the servers are measured in the continuous mode.
+    /// </summary>
+    public int ContinuousIntervalSeconds { get; set; } = 60;
 }
 
 [Serializable]

@@ -18,7 +18,7 @@
             Margin="{StaticResource Margin4}"
             VerticalAlignment="Center"
             DockPanel.Dock="Bottom"
-            Theme="{DynamicResource CardBorder}">
+            Classes="card">
 
             <StackPanel
                 Margin="{StaticResource Margin4}"
@@ -52,7 +52,7 @@
         <Border
             Margin="{StaticResource Margin4}"
             VerticalAlignment="Center"
-            Theme="{DynamicResource CardBorder}">
+            Classes="card">
 
             <ListBox
                 x:Name="lstCheckUpdates"

@@ -11,7 +11,7 @@
     Title="AriaVPN"
     Width="1200"
     Height="800"
-    MinWidth="600"
+    MinWidth="980"
     x:DataType="vms:MainWindowViewModel"
     Design.DataContext="{x:Static dd:DesignData.MainWindow}"
     Icon="/Assets/NotifyIcon1.ico"
@@ -33,7 +33,7 @@
                 Margin="{StaticResource Margin8}"
                 Padding="6,2"
                 DockPanel.Dock="Top"
-                Theme="{DynamicResource CardBorder}">
+                Classes="card">
                 <DockPanel>
                     <ContentControl
                         x:Name="conTheme"
@@ -43,6 +43,13 @@
                         x:Name="conAutoSelect"
                         Margin="{StaticResource MarginLr4}"
                         DockPanel.Dock="Right" />
+                    <Image
+                        Width="22"
+                        Height="22"
+                        Margin="4,0,6,0"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Left"
+                        Source="/Assets/AriaVPN.png" />
                     <Menu Margin="{StaticResource Margin2}">
                         <MenuItem Header="{x:Static resx:ResUI.menuServers}">
                             <MenuItem
@@ -56,9 +63,11 @@
                             <MenuItem x:Name="menuAddServerViaImage" Header="{x:Static resx:ResUI.menuAddServerViaImage}" />
                             <Separator />
                             <MenuItem x:Name="menuAddCustomServer" Header="{x:Static resx:ResUI.menuAddCustomServer}" />
-                            <MenuItem x:Name="menuAddPolicyGroupServer" Header="{x:Static resx:ResUI.menuAddPolicyGroupServer}" />
-                            <MenuItem x:Name="menuAddProxyChainServer" Header="{x:Static resx:ResUI.menuAddProxyChainServer}" />
-                            <MenuItem x:Name="menuAddCustomOutboundServer" Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
+                            <MenuItem Header="{x:Static resx:ResUI.menuAdvanced}">
+                                <MenuItem x:Name="menuAddPolicyGroupServer" Header="{x:Static resx:ResUI.menuAddPolicyGroupServer}" />
+                                <MenuItem x:Name="menuAddProxyChainServer" Header="{x:Static resx:ResUI.menuAddProxyChainServer}" />
+                                <MenuItem x:Name="menuAddCustomOutboundServer" Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
+                            </MenuItem>
                             <Separator />
                             <MenuItem x:Name="menuAddVmessServer" Header="{x:Static resx:ResUI.menuAddVmessServer}" />
                             <MenuItem x:Name="menuAddVlessServer" Header="{x:Static resx:ResUI.menuAddVlessServer}" />
@@ -85,8 +94,23 @@
                         </MenuItem>
 
                         <MenuItem Header="{x:Static resx:ResUI.menuSetting}">
+                            <MenuItem Header="{x:Static resx:ResUI.AutoSelectTitle}">
+                                <MenuItem
+                                    Header="{x:Static resx:ResUI.AutoSelectMenuEnable}"
+                                    IsChecked="{Binding AutoSelectViewModel.Enabled, Mode=TwoWay}"
+                                    ToggleType="CheckBox" />
+                                <MenuItem
+                                    Header="{x:Static resx:ResUI.AutoSelectMenuContinuous}"
+                                    IsChecked="{Binding AutoSelectViewModel.ContinuousMode, Mode=TwoWay}"
+                                    ToggleType="CheckBox" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding AutoSelectViewModel.SelectBestCmd}"
+                                    Header="{x:Static resx:ResUI.AutoSelectMenuBestNow}" />
+                                <MenuItem x:Name="menuAutoSelectSetting" Header="{x:Static resx:ResUI.AutoSelectMenu}" />
+                            </MenuItem>
+                            <Separator />
                             <MenuItem x:Name="menuOptionSetting" Header="{x:Static resx:ResUI.menuOptionSetting}" />
-                            <MenuItem x:Name="menuAutoSelectSetting" Header="{x:Static resx:ResUI.AutoSelectMenu}" />
                             <MenuItem x:Name="menuRoutingSetting" Header="{x:Static resx:ResUI.menuRoutingSetting}" />
                             <MenuItem x:Name="menuDNSSetting" Header="{x:Static resx:ResUI.menuDNSSetting}" />
                             <MenuItem x:Name="menuFullConfigTemplate" Header="{x:Static resx:ResUI.menuFullConfigTemplate}" />
@@ -112,26 +136,13 @@
                             </MenuItem>
                             <MenuItem x:Name="menuBackupAndRestore" Header="{x:Static resx:ResUI.menuBackupAndRestore}" />
                             <MenuItem x:Name="menuOpenTheFileLocation" Header="{x:Static resx:ResUI.menuOpenTheFileLocation}" />
-                        </MenuItem>
-
-                        <MenuItem x:Name="menuHelp" Header="{x:Static resx:ResUI.menuHelp}">
-                            <MenuItem x:Name="menuCheckUpdate" Header="{x:Static resx:ResUI.menuCheckUpdate}" />
+                            <MenuItem x:Name="menuReload" Header="{x:Static resx:ResUI.menuReload}" />
                             <Separator />
+                            <MenuItem x:Name="menuHelp" Header="{x:Static resx:ResUI.menuHelp}" />
                         </MenuItem>
-
-                        <MenuItem x:Name="menuReload" Header="{x:Static resx:ResUI.menuReload}" />
-
-                        <MenuItem x:Name="menuPromotion" Header="{x:Static resx:ResUI.menuPromotion}" />
 
                         <MenuItem x:Name="menuClose" Header="{x:Static resx:ResUI.menuExit}" />
                     </Menu>
-
-                    <Button
-                        x:Name="btnNewUpdate"
-                        Margin="{StaticResource MarginLr8}"
-                        HorizontalAlignment="Left"
-                        Content="{x:Static resx:ResUI.menuNewUpdate}"
-                        IsVisible="False" />
                 </DockPanel>
             </Border>
 

@@ -5,8 +5,13 @@ public partial class AutoSelectViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> SelectBestCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> SettingCmd { get; }
 
+    private bool _syncingState;
+
     [Reactive]
     public partial bool Enabled { get; set; }
+
+    [Reactive]
+    public partial bool ContinuousMode { get; set; }
 
     [Reactive]
     public partial bool IsBusy { get; set; }
@@ -40,7 +45,24 @@ public partial class AutoSelectViewModel : MyReactiveObject
         this.WhenAnyValue(x => x.Enabled)
             .DistinctUntilChanged()
             .Skip(1)
-            .SubscribeAsync(async enabled => await ApplyEnabledAsync(enabled));
+            .SubscribeAsync(async enabled =>
+            {
+                if (!_syncingState)
+                {
+                    await ApplyEnabledAsync(enabled);
+                }
+            });
+
+        this.WhenAnyValue(x => x.ContinuousMode)
+            .DistinctUntilChanged()
+            .Skip(1)
+            .SubscribeAsync(async continuous =>
+            {
+                if (!_syncingState)
+                {
+                    await ApplyContinuousAsync(continuous);
+                }
+            });
 
         AppEvents.AutoSelectStateChanged
             .AsObservable()
@@ -76,6 +98,35 @@ public partial class AutoSelectViewModel : MyReactiveObject
         RefreshStatus();
     }
 
+    private async Task ApplyContinuousAsync(bool continuous)
+    {
+        try
+        {
+            var option = _config?.AutoSelectItem;
+            if (option is null)
+            {
+                return;
+            }
+
+            option.ContinuousMode = continuous;
+            await ConfigHandler.SaveConfig(_config!);
+            if (option.Enabled)
+            {
+                AutoSelectService.Instance.RestartLoop();
+            }
+
+            AppEvents.AutoSelectStateChanged.Publish(RxVoid.Default);
+            NoticeManager.Instance.Enqueue(continuous ? ResUI.AutoSelectContinuousOn : ResUI.AutoSelectContinuousOff);
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog("AutoSelectViewModel", ex);
+            ContinuousMode = !continuous;
+        }
+
+        RefreshStatus();
+    }
+
     private async Task SelectBestAsync()
     {
         if (IsBusy)
@@ -105,7 +156,7 @@ public partial class AutoSelectViewModel : MyReactiveObject
         var ret = await AppManager.Instance.WindowDialog.ShowDialogAsync(viewModel);
         if (ret == true)
         {
-            await AutoSelectService.Instance.SetEnabledAsync(_config?.AutoSelectItem?.Enabled ?? false);
+            AutoSelectService.Instance.RestartLoop();
             RefreshStatus();
         }
     }
@@ -118,7 +169,17 @@ public partial class AutoSelectViewModel : MyReactiveObject
             return;
         }
 
-        Enabled = option.Enabled;
+        _syncingState = true;
+        try
+        {
+            Enabled = option.Enabled;
+            ContinuousMode = option.ContinuousMode;
+        }
+        finally
+        {
+            _syncingState = false;
+        }
+
         IsBusy = AutoSelectService.Instance.IsBusy;
 
         StrategyText = option.Strategy switch
@@ -129,9 +190,11 @@ public partial class AutoSelectViewModel : MyReactiveObject
             _ => ResUI.AutoSelectStrategyLeastPing,
         };
 
-        StatusText = option.Enabled
-            ? string.Format(ResUI.AutoSelectStatusEnabled, option.IntervalMinutes)
-            : ResUI.AutoSelectStatusDisabled;
+        StatusText = !option.Enabled
+            ? ResUI.AutoSelectStatusDisabled
+            : option.ContinuousMode
+                ? string.Format(ResUI.AutoSelectStatusContinuous, option.ContinuousIntervalSeconds)
+                : string.Format(ResUI.AutoSelectStatusEnabled, option.IntervalMinutes);
 
         var service = AutoSelectService.Instance;
         if (service.LastRunTime is not null)

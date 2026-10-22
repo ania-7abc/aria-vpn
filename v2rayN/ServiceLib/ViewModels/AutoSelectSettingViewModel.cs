@@ -28,6 +28,9 @@ public partial class AutoSelectSettingViewModel : MyReactiveObject, ICloseable
     public partial bool SelectOnStartup { get; set; }
 
     [Reactive]
+    public partial bool ContinuousMode { get; set; }
+
+    [Reactive]
     public partial AutoSelectStrategyItem? SelectedStrategy { get; set; }
 
     [Reactive]
@@ -36,9 +39,13 @@ public partial class AutoSelectSettingViewModel : MyReactiveObject, ICloseable
     [Reactive]
     public partial AutoSelectIntervalItem? SelectedInterval { get; set; }
 
+    [Reactive]
+    public partial AutoSelectContinuousIntervalItem? SelectedContinuousInterval { get; set; }
+
     public List<AutoSelectStrategyItem> StrategyItems { get; }
     public List<AutoSelectTestTypeItem> TestTypeItems { get; }
     public List<AutoSelectIntervalItem> IntervalItems { get; }
+    public List<AutoSelectContinuousIntervalItem> ContinuousIntervalItems { get; }
 
     public AutoSelectSettingViewModel()
     {
@@ -64,6 +71,10 @@ public partial class AutoSelectSettingViewModel : MyReactiveObject, ICloseable
             .Select(t => new AutoSelectIntervalItem { Value = t })
             .ToList();
 
+        ContinuousIntervalItems = new List<int> { 15, 30, 60, 120, 300, 600 }
+            .Select(t => new AutoSelectContinuousIntervalItem { Value = t })
+            .ToList();
+
         SaveCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await SaveAsync();
@@ -78,12 +89,15 @@ public partial class AutoSelectSettingViewModel : MyReactiveObject, ICloseable
             SwitchTolerance = option.SwitchTolerance;
             AllSubscriptions = option.AllSubscriptions;
             SelectOnStartup = option.SelectOnStartup;
+            ContinuousMode = option.ContinuousMode;
             IntervalMinutes = option.IntervalMinutes;
 
             SelectedStrategy = StrategyItems.FirstOrDefault(t => t.Value == option.Strategy) ?? StrategyItems.First();
             SelectedTestType = TestTypeItems.FirstOrDefault(t => t.Value == option.TestType) ?? TestTypeItems.First();
             SelectedInterval = IntervalItems.FirstOrDefault(t => t.Value == option.IntervalMinutes)
                                ?? new AutoSelectIntervalItem { Value = option.IntervalMinutes };
+            SelectedContinuousInterval = ContinuousIntervalItems.FirstOrDefault(t => t.Value == option.ContinuousIntervalSeconds)
+                                         ?? new AutoSelectContinuousIntervalItem { Value = option.ContinuousIntervalSeconds };
         }
     }
 
@@ -101,21 +115,16 @@ public partial class AutoSelectSettingViewModel : MyReactiveObject, ICloseable
         option.SwitchTolerance = (int)Math.Clamp(Math.Round(SwitchTolerance), 0, 60000);
         option.AllSubscriptions = AllSubscriptions;
         option.SelectOnStartup = SelectOnStartup;
+        option.ContinuousMode = ContinuousMode;
         option.IntervalMinutes = Math.Clamp(SelectedInterval?.Value ?? IntervalMinutes, 1, 1440);
+        option.ContinuousIntervalSeconds = Math.Clamp(SelectedContinuousInterval?.Value ?? 60, 15, 3600);
         option.Strategy = SelectedStrategy?.Value ?? EAutoSelectStrategy.LeastPing;
         option.TestType = SelectedTestType?.Value ?? ESpeedActionType.Tcping;
 
         await ConfigHandler.SaveConfig(_config);
 
-        //Apply the enabled state immediately: start or stop the background loop.
-        if (option.Enabled)
-        {
-            AutoSelectService.Instance.StartLoop();
-        }
-        else
-        {
-            AutoSelectService.Instance.StopLoop();
-        }
+        //Apply the new settings immediately: restart the background loop.
+        AutoSelectService.Instance.RestartLoop();
         AppEvents.AutoSelectStateChanged.Publish(RxVoid.Default);
 
         NoticeManager.Instance.Enqueue(ResUI.OperationSuccess);
@@ -139,4 +148,10 @@ public class AutoSelectIntervalItem
 {
     public int Value { get; set; }
     public string Name => $"{Value} min";
+}
+
+public class AutoSelectContinuousIntervalItem
+{
+    public int Value { get; set; }
+    public string Name => $"{Value} s";
 }

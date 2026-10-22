@@ -249,6 +249,9 @@
   <data name="NotFoundCore" xml:space="preserve">
     <value>The Core file (file name: {1}) was not found under the folder ({0}), please download and put it in the folder, download address: {2}</value>
   </data>
+  <data name="NoServerSelected" xml:space="preserve">
+    <value>No server selected</value>
+  </data>
   <data name="NoValidQRcodeFound" xml:space="preserve">
     <value>Scan completed, no valid QR code found</value>
   </data>
@@ -1866,6 +1869,9 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="menuAddCustomOutboundServer" xml:space="preserve">
     <value>Add a custom outbound</value>
   </data>
+  <data name="menuAdvanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
   <data name="MsgCustomOutboundFileNotFound" xml:space="preserve">
     <value>Custom outbound {0} file not found: {1}</value>
   </data>
@@ -1912,7 +1918,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
     <value>Auto server selection...</value>
   </data>
   <data name="AutoSelectSelectNow" xml:space="preserve">
-    <value>Select the best now</value>
+    <value>Best now</value>
   </data>
   <data name="AutoSelectEnabled" xml:space="preserve">
     <value>Auto selection enabled</value>
@@ -1997,5 +2003,47 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   </data>
   <data name="AutoSelectTestTypeMixedtest" xml:space="preserve">
     <value>Ping + speed test</value>
+  </data>
+  <data name="AutoSelectContinuous" xml:space="preserve">
+    <value>Best continuously</value>
+  </data>
+  <data name="AutoSelectContinuousTip" xml:space="preserve">
+    <value>Re-check the servers every few seconds and keep the fastest one active. Established connections stay open.</value>
+  </data>
+  <data name="AutoSelectContinuousOn" xml:space="preserve">
+    <value>Best-server mode enabled</value>
+  </data>
+  <data name="AutoSelectContinuousOff" xml:space="preserve">
+    <value>Best-server mode disabled</value>
+  </data>
+  <data name="AutoSelectLvContinuous" xml:space="preserve">
+    <value>Best server continuously (no connection drops)</value>
+  </data>
+  <data name="AutoSelectLvContinuousInterval" xml:space="preserve">
+    <value>Continuous check interval (seconds)</value>
+  </data>
+  <data name="AutoSelectStatusContinuous" xml:space="preserve">
+    <value>Best continuously · every {0} s</value>
+  </data>
+  <data name="AutoSelectNoSeamlessServer" xml:space="preserve">
+    <value>No server supports seamless switching right now</value>
+  </data>
+  <data name="AutoSelectMenuEnable" xml:space="preserve">
+    <value>Enable automatic selection</value>
+  </data>
+  <data name="AutoSelectMenuContinuous" xml:space="preserve">
+    <value>Best server continuously</value>
+  </data>
+  <data name="AutoSelectMenuBestNow" xml:space="preserve">
+    <value>Select the best server now</value>
+  </data>
+  <data name="AutoSelectSectionSchedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="AutoSelectSectionSelection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="AutoSelectSectionLimits" xml:space="preserve">
+    <value>Measurement and limits</value>
   </data>
 </root>

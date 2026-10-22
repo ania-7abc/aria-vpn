@@ -100,10 +100,16 @@
                 </StackPanel>
 
             </WrapPanel>
+            <Border
+                Margin="8,4,8,8"
+                Padding="4"
+                Classes="card"
+                ClipToBounds="True">
             <DataGrid
                 x:Name="lstProfiles"
                 AutoGenerateColumns="False"
-                BorderThickness="1"
+                Background="Transparent"
+                BorderThickness="0"
                 CanUserReorderColumns="True"
                 CanUserResizeColumns="True"
                 Classes.InsetContent="True"
@@ -318,6 +324,7 @@
                         Tag="TotalDown" />
                 </DataGrid.Columns>
             </DataGrid>
+            </Border>
         </DockPanel>
     </Grid>
 </UserControl>

@@ -7,7 +7,7 @@
     xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     d:DesignHeight="60"
-    d:DesignWidth="460"
+    d:DesignWidth="500"
     x:DataType="vms:AutoSelectViewModel"
     mc:Ignorable="d">
     <UserControl.Styles>
@@ -19,17 +19,19 @@
         </Style>
     </UserControl.Styles>
 
-    <Border Padding="12,6" VerticalAlignment="Center" Theme="{DynamicResource CardBorder}">
+    <Border
+        Padding="12,6"
+        VerticalAlignment="Center"
+        Classes="card">
         <StackPanel Orientation="Horizontal" Spacing="10">
-
             <StackPanel
+                VerticalAlignment="Center"
                 Orientation="Horizontal"
-                Spacing="6"
-                VerticalAlignment="Center">
+                Spacing="6">
                 <PathIcon
                     VerticalAlignment="Center"
                     Data="{StaticResource SemiIconBolt}"
-                    Foreground="{DynamicResource ButtonDefaultSuccessForeground}" />
+                    Foreground="{DynamicResource SemiColorPrimary}" />
                 <TextBlock
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
@@ -40,20 +42,15 @@
                     Theme="{DynamicResource SimpleToggleSwitch}" />
             </StackPanel>
 
-            <Border
-                Width="1"
-                Margin="0,4"
-                Background="{DynamicResource SemiColorBorder}" />
-
             <StackPanel
                 MinWidth="150"
                 MaxWidth="260"
-                Spacing="1"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                Spacing="1">
                 <StackPanel
+                    VerticalAlignment="Center"
                     Orientation="Horizontal"
-                    Spacing="6"
-                    VerticalAlignment="Center">
+                    Spacing="6">
                     <Ellipse
                         Width="7"
                         Height="7"
@@ -63,7 +60,7 @@
                     <TextBlock
                         x:Name="txtStatus"
                         FontSize="11"
-                        Opacity="0.8"
+                        Opacity="0.75"
                         Text="{Binding StatusText}"
                         TextTrimming="CharacterEllipsis" />
                 </StackPanel>
@@ -79,13 +76,13 @@
                 x:Name="btnSelectBest"
                 VerticalAlignment="Center"
                 Classes="Success"
-                Content="{x:Static resx:ResUI.AutoSelectSelectNow}" />
-
+                Content="{x:Static resx:ResUI.AutoSelectSelectNow}"
+                IsEnabled="{Binding !IsBusy}" />
             <Button
                 x:Name="btnSetting"
                 VerticalAlignment="Center"
                 Classes="IconButton"
-                ToolTip.Tip="{x:Static resx:ResUI.AutoSelectTitle}">
+                ToolTip.Tip="{x:Static resx:ResUI.AutoSelectMenu}">
                 <Button.Content>
                     <PathIcon Data="{StaticResource SemiIconSetting}" />
                 </Button.Content>

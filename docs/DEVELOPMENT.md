@@ -26,15 +26,15 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
 cd v2rayN
 dotnet build v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
 
-# unit tests of the selection logic (10 scenarios)
+# unit tests of the selection logic (11 scenarios)
 dotnet run --project v2rayN.Tests/AriaVPN.Tests.csproj -c Release
 
 # publish + build the .deb
 cd ..
-./package-aria-vpn.sh 7.25.6 --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.7 --cores /opt/AriaVPN/bin
 
 # rebuild only the .deb from the existing publish output
-./package-aria-vpn.sh 7.25.6 --no-publish --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.7 --no-publish --cores /opt/AriaVPN/bin
 ```
 
 ## Auto selection
@@ -53,6 +53,8 @@ cd ..
 | `MaxDelay` | ignore servers slower than this (0 = no limit) |
 | `AllSubscriptions` | measure all subscriptions or only the current one |
 | `SelectOnStartup` | run a measurement right after start-up |
+| `ContinuousMode` | keep the best server active: re-check every `ContinuousIntervalSeconds` and switch through the Xray API only |
+| `ContinuousIntervalSeconds` | pause between measurements in the continuous mode (15–3600) |
 
 Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
 
@@ -62,7 +64,13 @@ Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
 
 * `Init(config)`, `StartLoop()`, `StopLoop()`, `SetEnabledAsync(bool)`.
 * The loop waits 15 seconds, then runs a measurement and repeats every
-  `IntervalMinutes`.
+  `IntervalMinutes`, or every `ContinuousIntervalSeconds` when
+  `ContinuousMode` is enabled. `RestartLoop()` applies changed settings at once.
+* In the continuous mode the candidate list is filtered with
+  `CoreManager.CanHotSwitch()`, so only servers that can be activated through
+  the Xray API are measured. The improvement threshold is ignored there
+  (`SwitchTolerance` is treated as 0) and automatic switch notifications are
+  suppressed, because the mode may switch quite often.
 * Measurements use the existing `SpeedtestService.RunLoop(testType, profiles)`.
 * `SelectBestServer(candidates, delays, speeds, option, currentIndexId)` is a
   pure static function — all selection rules live there and are covered by the
@@ -77,11 +85,17 @@ Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
 ### UI
 
 * `AutoSelectView.axaml` — a card in the top bar of the main window: toggle,
-  status, current server with its delay, "select the best now" and "settings".
-* `AutoSelectSettingWindow.axaml` — interval, strategy, test type and the
-  advanced switches.
-* `MainWindow.axaml` also has an "Auto server selection..." item in the
-  settings menu.
+  continuous-mode toggle, status, current server with its delay, "select the
+  best now" and "settings".
+* `AutoSelectSettingWindow.axaml` — grouped settings: schedule (regular and
+  continuous interval), selection strategy and measurement limits.
+* `MainWindow.axaml` has an "Auto server selection" menu with the same toggles,
+  "select the best now" and the settings dialog.
+* The tray menu (`App.axaml`) offers enabling auto selection, toggling the
+  continuous mode and selecting the best server now. The tray tooltip shows the
+  running server and the auto selection state.
+* The main menu no longer has the upstream promotion/update entries; manual
+  group/chain/custom-outbound creation lives under "Advanced".
 * Strings live in `ServiceLib/Resx/ResUI.resx`; the UI is English-only.
 
 ## Branding
@@ -94,6 +108,9 @@ Defaults and sanitizing live in `ConfigHandler.LoadConfig`.
   rename the old `avares://v2rayN/...` stops resolving and the app crashes with
   `Could not create glyphTypeface. Font family: Inter`.
 * Icons: `Assets/AriaVPN.ico`, `AriaVPN.png`, `AriaVPN.icns`.
+* Tray icons `Assets/NotifyIcon1..4.ico` are colour-coded by the system-proxy
+  state (grey = direct, green = proxy, blue = unchanged, amber = PAC) and use
+  the same "A" mark as the application icon.
 * The application does not update itself from the upstream v2rayN releases
   (`CoreInfoManager.IsCheckUpdateSupported`); updates are delivered through the
   package.
@@ -152,11 +169,24 @@ non-Xray cores, custom/outbound/group nodes, fragment modes
 (`EnableFragment`, `EnableFinalFragment`) and an enabled full config template,
 because those cases rewrite or replace the generated config.
 
+## Interface
+
+* `Assets/GlobalStyles.axaml` is the single place for the visual system: cards
+  use `Classes="card"` (15 px radius, flat `SemiColorBackground2` surface, no
+  border), controls use 10 px radii, menus and popups use 12 px. Avoid the old
+  `Theme="{DynamicResource CardBorder}"` in new views.
+* Borders are reserved for window frames. The main window and dialogs keep the
+  system frame; their content is built from borderless cards.
+* Themes live in `ETheme` and are mapped in
+  `Views/ThemeSettingViewModel.ModifyTheme()`. The custom `Aria`, `Midnight` and
+  `Graphite` variants are declared in `Common/AriaTheme.cs`; their palette
+  overrides are in the `ThemeDictionaries` of `App.axaml`.
+
 ## Testing
 
-* `v2rayN.Tests` — 10 scenarios of `SelectBestServer`: strategies, unreachable
+* `v2rayN.Tests` — 11 scenarios of `SelectBestServer`: strategies, unreachable
   servers, a 0 ms server, `MaxDelay`, `OnlySwitchIfBetter`, the improvement
-  threshold and the "switched" flag.
+  threshold, the continuous mode and the "switched" flag.
 * Integration test in the real GUI: three profiles (two live TCP listeners and
   one dead port), TCP ping, `LeastPing`. Expected log line:
 

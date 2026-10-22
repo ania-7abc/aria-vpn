@@ -89,6 +89,18 @@ public class AutoSelectService
     }
 
     /// <summary>
+    /// Restart the background loop, for example after the check interval has changed.
+    /// </summary>
+    public void RestartLoop()
+    {
+        StopLoop();
+        if (_config?.AutoSelectItem.Enabled == true)
+        {
+            StartLoop();
+        }
+    }
+
+    /// <summary>
     /// Enable or disable the automatic selection.
     /// </summary>
     public async Task<bool> SetEnabledAsync(bool enabled)
@@ -128,8 +140,18 @@ public class AutoSelectService
 
             while (!ct.IsCancellationRequested)
             {
-                var minutes = Math.Clamp(_config?.AutoSelectItem.IntervalMinutes ?? 10, 1, 1440);
-                await Task.Delay(TimeSpan.FromMinutes(minutes), ct);
+                var option = _config?.AutoSelectItem;
+                if (option is null)
+                {
+                    break;
+                }
+
+                //The continuous mode re-checks the servers all the time and keeps
+                //the fastest one active; every switch is done without restarting the core.
+                var delay = option.ContinuousMode
+                    ? TimeSpan.FromSeconds(Math.Clamp(option.ContinuousIntervalSeconds, 15, 3600))
+                    : TimeSpan.FromMinutes(Math.Clamp(option.IntervalMinutes, 1, 1440));
+                await Task.Delay(delay, ct);
 
                 if (ct.IsCancellationRequested)
                 {
@@ -185,6 +207,22 @@ public class AutoSelectService
                 }
 
                 return null;
+            }
+
+            if (option.ContinuousMode)
+            {
+                //Only servers that can be activated through the Xray API take part in the
+                //continuous mode, so the core never has to be restarted to switch.
+                candidates = candidates.Where(t => CoreManager.Instance.CanHotSwitch(t)).ToList();
+                if (candidates.Count <= 0)
+                {
+                    if (manual)
+                    {
+                        NoticeManager.Instance.Enqueue(ResUI.AutoSelectNoSeamlessServer);
+                    }
+
+                    return null;
+                }
             }
 
             var delays = new ConcurrentDictionary<string, int>();
@@ -248,8 +286,9 @@ public class AutoSelectService
                     : string.Format(ResUI.AutoSelectKeptCurrent, result.Remarks, result.Delay);
                 NoticeManager.Instance.Enqueue(msg);
             }
-            else if (result.Switched)
+            else if (result.Switched && !option.ContinuousMode)
             {
+                //The continuous mode may switch quite often, so it stays quiet in the log only.
                 NoticeManager.Instance.Enqueue(string.Format(ResUI.AutoSelectSwitchedTo, result.Remarks, result.Delay));
             }
 
@@ -356,13 +395,15 @@ public class AutoSelectService
         };
 
         //Do not switch if the current server is good enough.
+        //The continuous mode always follows the best server, the hot switch keeps connections alive.
+        var tolerance = option.ContinuousMode ? 0 : option.SwitchTolerance;
         if (option.OnlySwitchIfBetter
             && current is not null
             && current.Delay >= 0
             && selected.Item.IndexId != current.Item.IndexId)
         {
             var improvement = current.Delay - selected.Delay;
-            if (improvement <= option.SwitchTolerance)
+            if (improvement <= tolerance)
             {
                 return new AutoSelectResult
                 {

@@ -13,12 +13,14 @@ public partial class AutoSelectSettingWindow : WindowBase<AutoSelectSettingViewM
         this.WhenActivated(disposables =>
         {
             this.Bind(ViewModel, vm => vm.Enabled, v => v.togEnabled.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ContinuousMode, v => v.togContinuous.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.OnlySwitchIfBetter, v => v.togOnlySwitchIfBetter.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.AllSubscriptions, v => v.togAllSubscriptions.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SelectOnStartup, v => v.togSelectOnStartup.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.MaxDelay, v => v.numMaxDelay.Value).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SwitchTolerance, v => v.numSwitchTolerance.Value).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SelectedInterval, v => v.cmbInterval.SelectedItem).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.SelectedContinuousInterval, v => v.cmbContinuousInterval.SelectedItem).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SelectedStrategy, v => v.cmbStrategy.SelectedItem).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SelectedTestType, v => v.cmbTestType.SelectedItem).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.SaveCmd, v => v.btnSave).DisposeWith(disposables);

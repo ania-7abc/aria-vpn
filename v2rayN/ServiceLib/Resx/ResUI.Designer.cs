@@ -763,6 +763,15 @@ namespace ServiceLib.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        public static string menuAdvanced {
+            get {
+                return ResourceManager.GetString("menuAdvanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add a custom configuration.
         /// </summary>
         public static string menuAddCustomServer {
@@ -2406,6 +2415,15 @@ namespace ServiceLib.Resx {
         public static string NotRunAsAdmin {
             get {
                 return ResourceManager.GetString("NotRunAsAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No server selected.
+        /// </summary>
+        public static string NoServerSelected {
+            get {
+                return ResourceManager.GetString("NoServerSelected", resourceCulture);
             }
         }
         
@@ -5685,6 +5703,132 @@ namespace ServiceLib.Resx {
         public static string AutoSelectTestTypeMixedtest {
             get {
                 return ResourceManager.GetString("AutoSelectTestTypeMixedtest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best continuously.
+        /// </summary>
+        public static string AutoSelectContinuous {
+            get {
+                return ResourceManager.GetString("AutoSelectContinuous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Re-check the servers every few seconds and keep the fastest one active. Established connections stay open..
+        /// </summary>
+        public static string AutoSelectContinuousTip {
+            get {
+                return ResourceManager.GetString("AutoSelectContinuousTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best-server mode enabled.
+        /// </summary>
+        public static string AutoSelectContinuousOn {
+            get {
+                return ResourceManager.GetString("AutoSelectContinuousOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best-server mode disabled.
+        /// </summary>
+        public static string AutoSelectContinuousOff {
+            get {
+                return ResourceManager.GetString("AutoSelectContinuousOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best server continuously (no connection drops).
+        /// </summary>
+        public static string AutoSelectLvContinuous {
+            get {
+                return ResourceManager.GetString("AutoSelectLvContinuous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Continuous check interval (seconds).
+        /// </summary>
+        public static string AutoSelectLvContinuousInterval {
+            get {
+                return ResourceManager.GetString("AutoSelectLvContinuousInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best continuously · every {0} s.
+        /// </summary>
+        public static string AutoSelectStatusContinuous {
+            get {
+                return ResourceManager.GetString("AutoSelectStatusContinuous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No server supports seamless switching right now.
+        /// </summary>
+        public static string AutoSelectNoSeamlessServer {
+            get {
+                return ResourceManager.GetString("AutoSelectNoSeamlessServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable automatic selection.
+        /// </summary>
+        public static string AutoSelectMenuEnable {
+            get {
+                return ResourceManager.GetString("AutoSelectMenuEnable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best server continuously.
+        /// </summary>
+        public static string AutoSelectMenuContinuous {
+            get {
+                return ResourceManager.GetString("AutoSelectMenuContinuous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the best server now.
+        /// </summary>
+        public static string AutoSelectMenuBestNow {
+            get {
+                return ResourceManager.GetString("AutoSelectMenuBestNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schedule.
+        /// </summary>
+        public static string AutoSelectSectionSchedule {
+            get {
+                return ResourceManager.GetString("AutoSelectSectionSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selection.
+        /// </summary>
+        public static string AutoSelectSectionSelection {
+            get {
+                return ResourceManager.GetString("AutoSelectSectionSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measurement and limits.
+        /// </summary>
+        public static string AutoSelectSectionLimits {
+            get {
+                return ResourceManager.GetString("AutoSelectSectionLimits", resourceCulture);
             }
         }
         

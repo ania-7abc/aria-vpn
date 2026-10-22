@@ -432,6 +432,14 @@ public partial class MainWindowViewModel : MyReactiveObject
                 return;
             }
 
+            if (_config.AutoSelectItem.ContinuousMode)
+            {
+                //The continuous mode promises seamless switching: never restart the core
+                //for it. The next measurement will try again.
+                Logging.SaveLog("AutoSelect: seamless switch is unavailable, the current server is kept");
+                return;
+            }
+
             await RefreshServersDispatcherAsync();
             await Reload();
         }

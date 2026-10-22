@@ -265,7 +265,7 @@ public class CoreManager
     /// Fragment modes and full config templates rewrite the generated config, so they
     /// may remove the API or the balancer that the hot switch relies on.
     /// </summary>
-    private bool CanHotSwitch(ProfileItem? node)
+    public bool CanHotSwitch(ProfileItem? node)
     {
         return _config is not null
                && node is not null

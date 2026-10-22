@@ -27,6 +27,7 @@ internal static class Program
         MaxDelayFiltersSlowServers();
         OnlySwitchIfBetterKeepsCurrentServer();
         ImprovementThresholdAllowsSwitch();
+        ContinuousModeAlwaysFollowsTheBest();
         SwitchIsReportedWhenServerChanges();
 
         Console.WriteLine(new string('-', 60));
@@ -167,6 +168,25 @@ internal static class Program
             "a");
 
         Check("A clearly better server is selected", result is not null && result.IndexId == "b" && result.Switched);
+    }
+
+    private static void ContinuousModeAlwaysFollowsTheBest()
+    {
+        var option = new AutoSelectItem
+        {
+            Strategy = EAutoSelectStrategy.LeastPing,
+            OnlySwitchIfBetter = true,
+            SwitchTolerance = 50,
+            ContinuousMode = true,
+        };
+        var result = AutoSelectService.SelectBestServer(
+            Profiles("a", "b"),
+            Delays(("a", 100), ("b", 90)),
+            Speeds(),
+            option,
+            "a");
+
+        Check("Continuous mode follows even a slightly better server", result is not null && result.IndexId == "b" && result.Switched);
     }
 
     private static void SwitchIsReportedWhenServerChanges()

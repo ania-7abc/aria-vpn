@@ -8,11 +8,42 @@
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     Title="{x:Static resx:ResUI.AutoSelectTitle}"
     Width="560"
-    Height="480"
+    Height="640"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterScreen"
     x:DataType="vms:AutoSelectSettingViewModel"
     mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="TextBlock.section">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorPrimary}" />
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="Margin" Value="0,6,12,6" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.hint">
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Opacity" Value="0.65" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="ToggleSwitch">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </Window.Styles>
+
     <DockPanel Margin="{StaticResource Margin8}">
         <StackPanel
             Margin="{StaticResource Margin4}"
@@ -32,157 +63,164 @@
                 IsCancel="True" />
         </StackPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Border Padding="12" Theme="{DynamicResource CardBorder}">
-                <Grid
-                    Margin="{StaticResource Margin4}"
-                    ColumnDefinitions="Auto,*,Auto"
-                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="{StaticResource Margin4}" Spacing="10">
 
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvEnabled}" />
-                <ToggleSwitch
-                    x:Name="togEnabled"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center" />
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Classes="section" Text="{x:Static resx:ResUI.AutoSelectSectionSchedule}" />
 
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvInterval}" />
-                <ComboBox
-                    x:Name="cmbInterval"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Width="160"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    DisplayMemberBinding="{Binding Name}"
-                    ItemsSource="{Binding IntervalItems}"
-                    SelectedItem="{Binding SelectedInterval}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvEnabled}" />
+                            <ToggleSwitch
+                                x:Name="togEnabled"
+                                Grid.Column="1" />
+                        </Grid>
 
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvStrategy}" />
-                <ComboBox
-                    x:Name="cmbStrategy"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Width="220"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    DisplayMemberBinding="{Binding Name}"
-                    ItemsSource="{Binding StrategyItems}"
-                    SelectedItem="{Binding SelectedStrategy}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvContinuous}" />
+                            <ToggleSwitch
+                                x:Name="togContinuous"
+                                Grid.Column="1" />
+                        </Grid>
+                        <TextBlock Classes="hint" Text="{x:Static resx:ResUI.AutoSelectContinuousTip}" />
 
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvTestType}" />
-                <ComboBox
-                    x:Name="cmbTestType"
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Width="220"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    DisplayMemberBinding="{Binding Name}"
-                    ItemsSource="{Binding TestTypeItems}"
-                    SelectedItem="{Binding SelectedTestType}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvContinuousInterval}" />
+                            <ComboBox
+                                x:Name="cmbContinuousInterval"
+                                Grid.Column="1"
+                                Width="150"
+                                DisplayMemberBinding="{Binding Name}"
+                                ItemsSource="{Binding ContinuousIntervalItems}"
+                                SelectedItem="{Binding SelectedContinuousInterval}" />
+                        </Grid>
 
-                <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvOnlySwitchIfBetter}" />
-                <ToggleSwitch
-                    x:Name="togOnlySwitchIfBetter"
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvInterval}" />
+                            <ComboBox
+                                x:Name="cmbInterval"
+                                Grid.Column="1"
+                                Width="150"
+                                DisplayMemberBinding="{Binding Name}"
+                                ItemsSource="{Binding IntervalItems}"
+                                SelectedItem="{Binding SelectedInterval}" />
+                        </Grid>
 
-                <TextBlock
-                    Grid.Row="5"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvMaxDelay}" />
-                <NumericUpDown
-                    x:Name="numMaxDelay"
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    Width="160"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    FormatString="0"
-                    Minimum="0"
-                    Maximum="60000"
-                    Increment="10" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvSelectOnStartup}" />
+                            <ToggleSwitch
+                                x:Name="togSelectOnStartup"
+                                Grid.Column="1" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
 
-                <TextBlock
-                    Grid.Row="6"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvSwitchTolerance}" />
-                <NumericUpDown
-                    x:Name="numSwitchTolerance"
-                    Grid.Row="6"
-                    Grid.Column="1"
-                    Width="160"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    FormatString="0"
-                    Minimum="0"
-                    Maximum="60000"
-                    Increment="5" />
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Classes="section" Text="{x:Static resx:ResUI.AutoSelectSectionSelection}" />
 
-                <TextBlock
-                    Grid.Row="7"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvAllSubscriptions}" />
-                <ToggleSwitch
-                    x:Name="togAllSubscriptions"
-                    Grid.Row="7"
-                    Grid.Column="1"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvStrategy}" />
+                            <ComboBox
+                                x:Name="cmbStrategy"
+                                Grid.Column="1"
+                                Width="220"
+                                DisplayMemberBinding="{Binding Name}"
+                                ItemsSource="{Binding StrategyItems}"
+                                SelectedItem="{Binding SelectedStrategy}" />
+                        </Grid>
 
-                <TextBlock
-                    Grid.Row="8"
-                    Grid.Column="0"
-                    Margin="{StaticResource Margin4}"
-                    VerticalAlignment="Center"
-                    Text="{x:Static resx:ResUI.AutoSelectLvSelectOnStartup}" />
-                <ToggleSwitch
-                    x:Name="togSelectOnStartup"
-                    Grid.Row="8"
-                    Grid.Column="1"
-                    Margin="{StaticResource Margin4}"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center" />
-                </Grid>
-            </Border>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvOnlySwitchIfBetter}" />
+                            <ToggleSwitch
+                                x:Name="togOnlySwitchIfBetter"
+                                Grid.Column="1" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Classes="section" Text="{x:Static resx:ResUI.AutoSelectSectionLimits}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvTestType}" />
+                            <ComboBox
+                                x:Name="cmbTestType"
+                                Grid.Column="1"
+                                Width="220"
+                                DisplayMemberBinding="{Binding Name}"
+                                ItemsSource="{Binding TestTypeItems}"
+                                SelectedItem="{Binding SelectedTestType}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvMaxDelay}" />
+                            <NumericUpDown
+                                x:Name="numMaxDelay"
+                                Grid.Column="1"
+                                Width="150"
+                                FormatString="0"
+                                Increment="10"
+                                Maximum="60000"
+                                Minimum="0" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvSwitchTolerance}" />
+                            <NumericUpDown
+                                x:Name="numSwitchTolerance"
+                                Grid.Column="1"
+                                Width="150"
+                                FormatString="0"
+                                Increment="5"
+                                Maximum="60000"
+                                Minimum="0" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="label"
+                                Text="{x:Static resx:ResUI.AutoSelectLvAllSubscriptions}" />
+                            <ToggleSwitch
+                                x:Name="togAllSubscriptions"
+                                Grid.Column="1" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </ScrollViewer>
     </DockPanel>
 </Window>

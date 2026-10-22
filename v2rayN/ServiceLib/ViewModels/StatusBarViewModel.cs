@@ -16,6 +16,20 @@ public partial class StatusBarViewModel : MyReactiveObject
     public EventChannel<RxVoid> AddServerViaScanRequested { get; } = new();
     public EventChannel<RxVoid> AddServerViaClipboardRequested { get; } = new();
 
+    #region Auto select
+
+    [Reactive]
+    public partial bool BlAutoSelectEnabled { get; set; }
+
+    [Reactive]
+    public partial bool BlAutoSelectContinuous { get; set; }
+
+    public ReactiveCommand<RxVoid, RxVoid> ToggleAutoSelectCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> ToggleAutoSelectContinuousCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> SelectBestServerCmd { get; }
+
+    #endregion Auto select
+
     #region ObservableCollection
 
     public BulkObservableCollection<RoutingItem> RoutingItems { get; } = [];
@@ -88,6 +102,9 @@ public partial class StatusBarViewModel : MyReactiveObject
 
     [Reactive]
     public partial string RunningInfoDisplay { get; set; }
+
+    [Reactive]
+    public partial bool BlRunningInfoVisible { get; set; }
 
     [Reactive]
     public partial string SpeedProxyDisplay { get; set; }
@@ -177,6 +194,35 @@ public partial class StatusBarViewModel : MyReactiveObject
             await UpdateSubscriptionProcess(true);
         });
 
+        //Auto select, available from the tray menu
+        ToggleAutoSelectCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var enabled = !(_config?.AutoSelectItem.Enabled ?? false);
+            await AutoSelectService.Instance.SetEnabledAsync(enabled);
+            NoticeManager.Instance.Enqueue(enabled ? ResUI.AutoSelectEnabled : ResUI.AutoSelectDisabled);
+        });
+        ToggleAutoSelectContinuousCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var option = _config?.AutoSelectItem;
+            if (option is null)
+            {
+                return;
+            }
+
+            option.ContinuousMode = !option.ContinuousMode;
+            await ConfigHandler.SaveConfig(_config!);
+            if (option.Enabled)
+            {
+                AutoSelectService.Instance.RestartLoop();
+            }
+            AppEvents.AutoSelectStateChanged.Publish(RxVoid.Default);
+            NoticeManager.Instance.Enqueue(option.ContinuousMode ? ResUI.AutoSelectContinuousOn : ResUI.AutoSelectContinuousOff);
+        });
+        SelectBestServerCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await AutoSelectService.Instance.RunAsync(true);
+        });
+
         //System proxy
         SystemProxyClearCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -209,6 +255,11 @@ public partial class StatusBarViewModel : MyReactiveObject
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .SubscribeAsync(async result => await SetListenerType(result));
 
+        AppEvents.AutoSelectStateChanged
+            .AsObservable()
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(_ => RefreshAutoSelectState());
+
         #endregion AppEvents
 
         _ = Init();
@@ -223,6 +274,20 @@ public partial class StatusBarViewModel : MyReactiveObject
         await ChangeSystemProxyAsync(_config.SystemProxyItem.SysProxyType, false);
 
         BlRouting = true;
+        RefreshAutoSelectState();
+    }
+
+    /// <summary>
+    /// Mirrors the automatic selection settings for the tray menu and its tooltip.
+    /// </summary>
+    public void RefreshAutoSelectState()
+    {
+        var option = _config?.AutoSelectItem;
+        BlAutoSelectEnabled = option?.Enabled ?? false;
+        BlAutoSelectContinuous = option?.ContinuousMode ?? false;
+        RunningServerToolTipText = GetRunningServerToolTipText(RunningServerDisplay.IsNullOrEmpty()
+            ? ResUI.CheckServerSettings
+            : RunningServerDisplay);
     }
 
     private async Task CopyProxyCmdToClipboard()
@@ -273,14 +338,26 @@ public partial class StatusBarViewModel : MyReactiveObject
         }
         else
         {
-            RunningServerDisplay = ResUI.CheckServerSettings;
+            RunningServerDisplay = ResUI.NoServerSelected;
             RunningServerToolTipText = GetRunningServerToolTipText(RunningServerDisplay);
         }
     }
 
     private string GetRunningServerToolTipText(string serverInfo)
     {
-        return Utils.IsLinux() ? Global.AppName : serverInfo;
+        var text = Utils.IsLinux()
+            ? $"{Global.AppName} — {serverInfo}"
+            : serverInfo;
+
+        var option = _config?.AutoSelectItem;
+        if (option?.Enabled == true)
+        {
+            text += option.ContinuousMode
+                ? $" · best every {option.ContinuousIntervalSeconds}s"
+                : $" · auto every {option.IntervalMinutes}min";
+        }
+
+        return text;
     }
 
     private async Task RefreshServersMenu()
@@ -355,6 +432,7 @@ public partial class StatusBarViewModel : MyReactiveObject
     public async Task TestServerAvailabilityResult(string msg)
     {
         RunningInfoDisplay = msg;
+        BlRunningInfoVisible = msg.IsNotEmpty();
         await Task.CompletedTask;
     }
 

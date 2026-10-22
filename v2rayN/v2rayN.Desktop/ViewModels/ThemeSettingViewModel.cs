@@ -2,6 +2,7 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
 using AvaloniaEdit;
 using Semi.Avalonia;
+using v2rayN.Desktop.Common;
 
 namespace v2rayN.Desktop.ViewModels;
 
@@ -85,8 +86,12 @@ public partial class ThemeSettingViewModel : MyReactiveObject
                 nameof(ETheme.Desert) => SemiTheme.Desert,
                 nameof(ETheme.Dusk) => SemiTheme.Dusk,
                 nameof(ETheme.NightSky) => SemiTheme.NightSky,
+                nameof(ETheme.Aria) => AriaTheme.Light,
+                nameof(ETheme.Midnight) => AriaTheme.Midnight,
+                nameof(ETheme.Graphite) => AriaTheme.Graphite,
                 _ => ThemeVariant.Default,
             };
+
         }
     }
 

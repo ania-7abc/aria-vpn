@@ -8,5 +8,8 @@ public enum ETheme
     Aquatic,
     Desert,
     Dusk,
-    NightSky
+    NightSky,
+    Aria,
+    Midnight,
+    Graphite
 }

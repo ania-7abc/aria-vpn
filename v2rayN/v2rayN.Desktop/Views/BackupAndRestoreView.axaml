@@ -28,7 +28,7 @@
             <Border
                 Margin="{StaticResource Margin4}"
                 VerticalAlignment="Center"
-                Theme="{DynamicResource CardBorder}">
+                Classes="card">
 
                 <Grid Margin="{StaticResource Margin4}" RowDefinitions="Auto,Auto,Auto,Auto">
                     <Grid.ColumnDefinitions>
@@ -85,7 +85,7 @@
             <Border
                 Margin="{StaticResource Margin4}"
                 VerticalAlignment="Center"
-                Theme="{DynamicResource CardBorder}">
+                Classes="card">
                 <Grid Margin="{StaticResource Margin4}" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition

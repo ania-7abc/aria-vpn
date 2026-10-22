@@ -20,12 +20,18 @@ regularly, pick the best one and switch to it automatically.
   * **Fastest** — the server with the highest measured speed.
   * **Random** — a random reachable server (useful to spread the load).
   * **Fallback** — keep the current server while it is reachable.
+* **Continuous best-server mode** — re-check the servers every few seconds and
+  keep the fastest one active. Only servers that can be activated through the
+  Xray API take part, so the core is never restarted and established
+  connections are not interrupted. The mode can be toggled from the card, the
+  menu and the tray icon.
 * **Smart switching** — switch only when the new server is better by a given
   margin, ignore servers above a maximum delay, use all subscriptions or only
   the current one, and pick the best server on start-up.
 * **Transparent** — the active server is switched in the running Xray core, so
   existing connections are kept; the list and a notification show what happened.
-  When the core cannot switch on the fly, it is restarted instead.
+  In the regular mode, the core is restarted only when a seamless switch is not
+  possible.
 
 ![Auto selection settings](docs/screenshots/autoselect-settings.png)
 
@@ -35,13 +41,17 @@ regularly, pick the best one and switch to it automatically.
   TUIC / Hysteria2 / AnyTLS / WireGuard and more.
 * Subscriptions with automatic updates, routing rules, DNS settings, TUN mode.
 * Live server switching for Xray without dropping connections, automatic core
-  restart as a fallback, tray menu, dark and light themes.
+  restart as a fallback, a light card-based interface with uniform rounded
+  corners and ten themes, including the custom **Aria**, **Midnight** and
+  **Graphite** palettes.
+* Tray icon shows the current state and offers automatic selection, continuous
+  best-server mode and "select the best server now".
 * English user interface.
 
 ## Install (Debian / Ubuntu)
 
 ```bash
-sudo dpkg -i aria-vpn_7.25.6_amd64.deb
+sudo dpkg -i aria-vpn_7.25.7_amd64.deb
 aria-vpn
 ```
 
@@ -61,7 +71,7 @@ dotnet build v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
 dotnet run --project v2rayN/v2rayN.Tests/AriaVPN.Tests.csproj -c Release
 
 # build the .deb (cores are taken from a local directory)
-./package-aria-vpn.sh 7.25.6 --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.7 --cores /opt/AriaVPN/bin
 ```
 
 The cores directory must have the layout of the official v2rayN release
