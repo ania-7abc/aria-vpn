@@ -129,15 +129,18 @@ EOF
 
 install -m 644 /dev/stdin "$ROOT/usr/share/applications/$PKG_NAME.desktop" <<EOF
 [Desktop Entry]
+Version=1.0
 Type=Application
 Name=AriaVPN
 GenericName=VPN client
 Comment=VPN client with automatic server selection
-Exec=aria-vpn
+Exec=/usr/bin/aria-vpn %U
+TryExec=/usr/bin/aria-vpn
 Icon=$PKG_NAME
 Terminal=false
-Categories=Network;Security;
+Categories=Network;
 Keywords=vpn;proxy;xray;
+StartupNotify=true
 StartupWMClass=AriaVPN
 EOF
 
