@@ -31,10 +31,10 @@ dotnet run --project v2rayN.Tests/AriaVPN.Tests.csproj -c Release
 
 # publish + build the .deb
 cd ..
-./package-aria-vpn.sh 7.25.11 --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.12 --cores /opt/AriaVPN/bin
 
 # rebuild only the .deb from the existing publish output
-./package-aria-vpn.sh 7.25.11 --no-publish --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.12 --no-publish --cores /opt/AriaVPN/bin
 ```
 
 ## Auto selection
