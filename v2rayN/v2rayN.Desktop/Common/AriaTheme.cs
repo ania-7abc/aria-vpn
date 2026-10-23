@@ -3,8 +3,8 @@ using Avalonia.Styling;
 namespace v2rayN.Desktop.Common;
 
 /// <summary>
-/// Custom AriaVPN color variants. Aria variants only override the accent tokens,
-/// while Contrast variants also redefine surfaces, text and borders.
+/// Custom AriaVPN color variants. Aria variants use softly tinted indigo surfaces,
+/// while Contrast variants use stronger text and border colors.
 /// </summary>
 public static class AriaTheme
 {

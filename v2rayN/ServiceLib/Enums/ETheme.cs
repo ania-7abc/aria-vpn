@@ -11,6 +11,8 @@ public enum ETheme
     NightSky,
     AriaLight,
     AriaDark,
+    AriaSystem,
     ContrastLight,
-    ContrastDark
+    ContrastDark,
+    ContrastSystem
 }

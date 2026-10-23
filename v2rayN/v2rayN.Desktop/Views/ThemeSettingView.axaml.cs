@@ -12,10 +12,13 @@ public partial class ThemeSettingView : ReactiveUserControl<ThemeSettingViewMode
 
     private static readonly IReadOnlyList<ThemeOption> ThemeOptions =
     [
+        new(nameof(ETheme.FollowSystem), "System"),
         new(nameof(ETheme.Dark), "Dark"),
         new(nameof(ETheme.Light), "Light"),
+        new(nameof(ETheme.AriaSystem), "Aria System"),
         new(nameof(ETheme.AriaDark), "Aria Dark"),
         new(nameof(ETheme.AriaLight), "Aria Light"),
+        new(nameof(ETheme.ContrastSystem), "Contrast System"),
         new(nameof(ETheme.ContrastDark), "Contrast Dark"),
         new(nameof(ETheme.ContrastLight), "Contrast Light"),
     ];

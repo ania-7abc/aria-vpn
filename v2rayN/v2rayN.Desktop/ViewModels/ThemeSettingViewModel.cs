@@ -8,6 +8,8 @@ namespace v2rayN.Desktop.ViewModels;
 
 public partial class ThemeSettingViewModel : MyReactiveObject
 {
+    private readonly IPlatformSettings? _platformSettings;
+
     [Reactive] public partial string CurrentTheme { get; set; }
 
     [Reactive] public partial int CurrentFontSize { get; set; }
@@ -21,11 +23,25 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         NormalizeTheme();
         BindingUI();
         RestoreUI();
+
+        _platformSettings = Application.Current?.PlatformSettings;
+        if (_platformSettings is not null)
+        {
+            _platformSettings.ColorValuesChanged += OnPlatformColorValuesChanged;
+        }
     }
 
     private static bool IsDarkSystemTheme()
     {
-        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+        return Application.Current?.PlatformSettings?.GetColorValues().ThemeVariant == PlatformThemeVariant.Dark;
+    }
+
+    private void OnPlatformColorValuesChanged(object? sender, PlatformColorValues e)
+    {
+        if (CurrentTheme is nameof(ETheme.AriaSystem) or nameof(ETheme.ContrastSystem))
+        {
+            Dispatcher.UIThread.Post(ModifyTheme);
+        }
     }
 
     private void NormalizeTheme()
@@ -33,13 +49,13 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         var theme = _config.UiItem.CurrentTheme;
         var normalized = theme switch
         {
-            nameof(ETheme.Light) or nameof(ETheme.Dark)
-                or nameof(ETheme.AriaLight) or nameof(ETheme.AriaDark)
-                or nameof(ETheme.ContrastLight) or nameof(ETheme.ContrastDark) => theme,
+            nameof(ETheme.FollowSystem) or nameof(ETheme.Dark) or nameof(ETheme.Light)
+                or nameof(ETheme.AriaSystem) or nameof(ETheme.AriaLight) or nameof(ETheme.AriaDark)
+                or nameof(ETheme.ContrastSystem) or nameof(ETheme.ContrastLight) or nameof(ETheme.ContrastDark) => theme,
             "Aria" => nameof(ETheme.AriaLight),
             "Midnight" => nameof(ETheme.AriaDark),
             "Graphite" => nameof(ETheme.ContrastDark),
-            _ => IsDarkSystemTheme() ? nameof(ETheme.AriaDark) : nameof(ETheme.AriaLight),
+            _ => nameof(ETheme.AriaSystem),
         };
 
         if (!string.Equals(_config.UiItem.CurrentTheme, normalized, StringComparison.Ordinal))
@@ -105,21 +121,24 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         var app = Application.Current;
         if (app is not null)
         {
+            var isDark = IsDarkSystemTheme();
             app.RequestedThemeVariant = CurrentTheme switch
             {
+                nameof(ETheme.FollowSystem) => ThemeVariant.Default,
                 nameof(ETheme.Dark) => ThemeVariant.Dark,
                 nameof(ETheme.Light) => ThemeVariant.Light,
                 nameof(ETheme.Aquatic) => SemiTheme.Aquatic,
                 nameof(ETheme.Desert) => SemiTheme.Desert,
                 nameof(ETheme.Dusk) => SemiTheme.Dusk,
                 nameof(ETheme.NightSky) => SemiTheme.NightSky,
+                nameof(ETheme.AriaSystem) => isDark ? AriaTheme.AriaDark : AriaTheme.AriaLight,
                 nameof(ETheme.AriaLight) => AriaTheme.AriaLight,
                 nameof(ETheme.AriaDark) => AriaTheme.AriaDark,
+                nameof(ETheme.ContrastSystem) => isDark ? AriaTheme.ContrastDark : AriaTheme.ContrastLight,
                 nameof(ETheme.ContrastLight) => AriaTheme.ContrastLight,
                 nameof(ETheme.ContrastDark) => AriaTheme.ContrastDark,
                 _ => ThemeVariant.Default,
             };
-
         }
     }
 

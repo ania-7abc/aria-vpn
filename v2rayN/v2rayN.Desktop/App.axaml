@@ -17,22 +17,48 @@
             </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="{x:Static common:AriaTheme.AriaLight}">
-                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#4F46E5" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#6366F1" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#4338CA" />
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#F6F6FB" />
+                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#FCFCFF" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#F2F3FA" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#EBEDF6" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#E3E6F2" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#F4F5FB" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#ECEEF7" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#E5E8F3" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#DFE2F0" />
+                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#5B5BD6" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#6F6FE2" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#4A4AC4" />
                     <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#C7C7EF" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#EEF0FF" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#E0E4FF" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#D0D6FF" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#EEEEFC" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#E4E4FA" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#D8D8F7" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#1A1B22" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#3D3F4B" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#6B6E7D" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#989BAA" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="{x:Static common:AriaTheme.AriaDark}">
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#0F1119" />
+                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#141725" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#1A1E2E" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#202536" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#272D42" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#181C2A" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#1F2434" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#262C3F" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#2D344A" />
                     <SolidColorBrush x:Key="SemiColorPrimary" Color="#6366F1" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#818CF8" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#7C83FF" />
                     <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#4F46E5" />
                     <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#343B66" />
                     <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#1E2450" />
                     <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#272E63" />
                     <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#303878" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#F2F3FB" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#D3D6E6" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#A3A8BE" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#7C829A" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="{x:Static common:AriaTheme.ContrastLight}">
                     <SolidColorBrush x:Key="SemiColorBackground0" Color="#FFFFFF" />
