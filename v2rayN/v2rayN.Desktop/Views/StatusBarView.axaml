@@ -10,6 +10,53 @@
     x:DataType="vms:StatusBarViewModel"
     Design.DataContext="{x:Static dd:DesignData.StatusBar}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ControlTheme x:Key="TunBadgeButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Button.tunBadge">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.tunBadge Border.tunPill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.14" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.14" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.tunBadge:pointerover Border.tunPill">
+            <Setter Property="BorderBrush" Value="{DynamicResource SemiColorPrimary}" />
+            <Setter Property="Background" Value="{DynamicResource SemiColorPrimaryLightPointerover}" />
+        </Style>
+        <Style Selector="Button.tunBadge:pressed Border.tunPill">
+            <Setter Property="Background" Value="{DynamicResource SemiColorPrimaryLightActive}" />
+        </Style>
+        <Style Selector="Button.tunBadge:pointerover Border.tunOff">
+            <Setter Property="BorderBrush" Value="{DynamicResource SemiColorText3}" />
+            <Setter Property="Background" Value="{DynamicResource SemiColorFill1}" />
+        </Style>
+        <Style Selector="Button.tunBadge:pressed Border.tunOff">
+            <Setter Property="Background" Value="{DynamicResource SemiColorFill2}" />
+        </Style>
+    </UserControl.Styles>
     <Border
         Margin="8,0,8,8"
         Padding="6,2"
@@ -35,47 +82,63 @@
                 Spacing="8">
                 <Button
                     x:Name="btnTun"
-                    Padding="0"
-                    Background="Transparent"
-                    BorderThickness="0"
+                    Classes="tunBadge"
                     Click="BtnTun_Click"
-                    Theme="{DynamicResource BorderlessButton}"
+                    Theme="{StaticResource TunBadgeButton}"
                     ToolTip.Tip="{x:Static resx:ResUI.TbEnableTunAs}">
                     <Panel>
                         <Border
-                            Padding="8,2"
+                            Classes="tunPill"
+                            Padding="12,5"
                             Background="{DynamicResource SemiColorPrimaryLight}"
-                            CornerRadius="8"
+                            BorderBrush="{DynamicResource SemiColorPrimary}"
+                            BorderThickness="1"
+                            CornerRadius="10"
                             IsVisible="{Binding EnableTun}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="7">
                                 <Ellipse
-                                    Width="6"
-                                    Height="6"
+                                    Width="8"
+                                    Height="8"
                                     VerticalAlignment="Center"
                                     Fill="{DynamicResource SemiColorSuccess}" />
                                 <TextBlock
-                                    FontSize="11"
+                                    FontSize="12"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SemiColorPrimary}"
                                     Text="TUN" />
+                                <TextBlock
+                                    FontSize="9"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource SemiColorSuccess}"
+                                    Text="ON"
+                                    VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                         <Border
-                            Padding="8,2"
+                            Classes="tunPill tunOff"
+                            Padding="12,5"
                             Background="{DynamicResource SemiColorFill0}"
-                            CornerRadius="8"
+                            BorderBrush="{DynamicResource SemiColorBorder}"
+                            BorderThickness="1"
+                            CornerRadius="10"
                             IsVisible="{Binding !EnableTun}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="7">
                                 <Ellipse
-                                    Width="6"
-                                    Height="6"
+                                    Width="8"
+                                    Height="8"
                                     VerticalAlignment="Center"
                                     Fill="{DynamicResource SemiColorText3}" />
                                 <TextBlock
-                                    FontSize="11"
+                                    FontSize="12"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SemiColorText2}"
                                     Text="TUN" />
+                                <TextBlock
+                                    FontSize="9"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource SemiColorText3}"
+                                    Text="OFF"
+                                    VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                     </Panel>
@@ -89,19 +152,25 @@
                     ToolTip.Tip="{x:Static resx:ResUI.menuRouting}" />
             </StackPanel>
 
-            <ComboBox
-                x:Name="cmbSystemProxy"
-                Width="140"
+            <Panel
+                x:Name="proxyHost"
                 Margin="{StaticResource MarginLr8}"
                 VerticalAlignment="Center"
-                DockPanel.Dock="Right"
-                IsVisible="{Binding !EnableTun}"
-                ToolTip.Tip="{x:Static resx:ResUI.menuSystemproxy}">
-                <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyClear}" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxySet}" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyNothing}" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyPac}" />
-            </ComboBox>
+                DockPanel.Dock="Right">
+                <ComboBox
+                    x:Name="cmbSystemProxy"
+                    Width="140"
+                    ToolTip.Tip="{x:Static resx:ResUI.menuSystemproxy}">
+                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyClear}" />
+                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxySet}" />
+                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyNothing}" />
+                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyPac}" />
+                </ComboBox>
+                <Canvas
+                    x:Name="proxyDust"
+                    ClipToBounds="False"
+                    IsHitTestVisible="False" />
+            </Panel>
 
             <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center">
                 <ToolTip.Tip>
