@@ -61,6 +61,7 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
         }
 
         cmbSystemProxy.IsVisible = true;
+        cmbSystemProxy.Opacity = 1;
         proxyDust.Children.Clear();
         _animatingProxy = false;
 
@@ -89,108 +90,54 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
 
         var en = ViewModel.EnableTun;
         _animatingProxy = true;
+        proxyDust.Children.Clear();
 
         if (en)
         {
-            var w = proxyHost.Bounds.Width;
-            var h = proxyHost.Bounds.Height;
-            if (w <= 2 || h <= 2)
+            cmbSystemProxy.Opacity = 1;
+            cmbSystemProxy.RenderTransform = null;
+            cmbSystemProxy.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+
+            var anim = new Animation
             {
-                w = cmbSystemProxy.Bounds.Width > 0 ? cmbSystemProxy.Bounds.Width : 140;
-                h = cmbSystemProxy.Bounds.Height > 0 ? cmbSystemProxy.Bounds.Height : 32;
-            }
-
-            proxyDust.Children.Clear();
-            proxyDust.Width = w;
-            proxyDust.Height = h;
-            Canvas.SetLeft(proxyDust, 0);
-            Canvas.SetTop(proxyDust, 0);
-
-            var rand = new Random();
-            var steps = 36;
-            for (var s = 0; s < steps; s++)
-            {
-                var piece = new Border
-                {
-                    Height = Math.Max(2, h / (double)steps),
-                    Width = w,
-                    Background = new SolidColorBrush(Color.FromRgb(142, 142, 152)),
-                    Opacity = 1.0,
-                    RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative),
-                };
-                var top = s * (h / steps);
-                Canvas.SetLeft(piece, 0);
-                Canvas.SetTop(piece, top);
-                proxyDust.Children.Add(piece);
-                _ = SliceFade(piece, rand, top, w, s, steps);
-            }
-
-            _ = Task.Delay(520).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
-            {
-                if (cmbSystemProxy is not null && ViewModel?.EnableTun == true)
-                {
-                    cmbSystemProxy.IsVisible = false;
-                }
-                proxyDust.Children.Clear();
-                _animatingProxy = false;
-            }, DispatcherPriority.Background));
-            return;
-        }
-
-        proxyDust.Children.Clear();
-        cmbSystemProxy.Opacity = 0;
-        cmbSystemProxy.RenderTransform = new ScaleTransform(0.98, 0.98);
-        cmbSystemProxy.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
-        cmbSystemProxy.IsVisible = true;
-
-        var anim = new Animation
-        {
-            Duration = TimeSpan.FromMilliseconds(260),
-            Easing = new CubicEaseOut(),
-            FillMode = FillMode.Forward,
-            Children =
-            {
-                new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(OpacityProperty, 0.0), new Setter(ScaleTransform.ScaleXProperty, 0.98), new Setter(ScaleTransform.ScaleYProperty, 0.98) } },
-                new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 1.0), new Setter(ScaleTransform.ScaleXProperty, 1.0), new Setter(ScaleTransform.ScaleYProperty, 1.0) } }
-            }
-        };
-        anim.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() => _animatingProxy = false));
-    }
-
-    private async Task SliceFade(Border p, Random r, double top0, double w, int s, int steps)
-    {
-        try
-        {
-            var delay = TimeSpan.FromMilliseconds(s * 10);
-            await Task.Delay(delay);
-            var a1 = new Animation
-            {
-                Duration = TimeSpan.FromMilliseconds(380),
+                Duration = TimeSpan.FromMilliseconds(160),
                 Easing = new CubicEaseIn(),
                 FillMode = FillMode.Forward,
                 Children =
                 {
-                    new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(ScaleTransform.ScaleXProperty, 1.0), new Setter(ScaleTransform.ScaleYProperty, 1.0), new Setter(OpacityProperty, 1.0) } },
-                    new KeyFrame { Cue = new Cue(0.4d), Setters = { new Setter(ScaleTransform.ScaleXProperty, 0.7), new Setter(ScaleTransform.ScaleYProperty, 0.6), new Setter(OpacityProperty, 0.7) } },
-                    new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(ScaleTransform.ScaleXProperty, 0.25), new Setter(ScaleTransform.ScaleYProperty, 0.25), new Setter(OpacityProperty, 0.0) } }
+                    new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(OpacityProperty, 1.0) } },
+                    new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 0.0) } }
                 }
             };
-            var a2 = new Animation
+            anim.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
             {
-                Duration = TimeSpan.FromMilliseconds(380),
-                Easing = new CubicEaseOut(),
-                FillMode = FillMode.Forward,
-                Children =
+                if (ViewModel?.EnableTun == true && cmbSystemProxy is not null)
                 {
-                    new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(TranslateTransform.XProperty, 0.0), new Setter(TranslateTransform.YProperty, top0) } },
-                    new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(TranslateTransform.XProperty, r.Next(-10, 10)), new Setter(TranslateTransform.YProperty, top0 - r.Next(16, 34)) } }
+                    cmbSystemProxy.IsVisible = false;
+                    cmbSystemProxy.Opacity = 1;
                 }
-            };
-            p.RenderTransform = new TransformGroup { Children = { new TranslateTransform(0, top0), new ScaleTransform(1, 1) } };
-            p.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
-            await Task.WhenAll(a1.RunAsync(p), a2.RunAsync(p));
+                _animatingProxy = false;
+            }));
+            return;
         }
-        catch { }
+
+        cmbSystemProxy.Opacity = 0;
+        cmbSystemProxy.RenderTransform = null;
+        cmbSystemProxy.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+        cmbSystemProxy.IsVisible = true;
+
+        var animIn = new Animation
+        {
+            Duration = TimeSpan.FromMilliseconds(180),
+            Easing = new CubicEaseOut(),
+            FillMode = FillMode.Forward,
+            Children =
+            {
+                new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(OpacityProperty, 0.0) } },
+                new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 1.0) } }
+            }
+        };
+        animIn.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() => _animatingProxy = false));
     }
 
     private void RefreshIcon()
