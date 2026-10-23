@@ -16,9 +16,9 @@
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
-    <!--  Unified card surface: rounded, flat, no visible border.  -->
+    <!--  Unified card surface: slightly lifted from the window, no visible border.  -->
     <Style Selector="Border.card">
-        <Setter Property="Background" Value="{DynamicResource SemiColorBackground2}" />
+        <Setter Property="Background" Value="{DynamicResource SemiColorBackground1}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Padding" Value="14" />

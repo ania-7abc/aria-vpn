@@ -51,7 +51,7 @@ regularly, pick the best one and switch to it automatically.
 ## Install (Debian / Ubuntu)
 
 ```bash
-sudo dpkg -i aria-vpn_7.25.10_amd64.deb
+sudo dpkg -i aria-vpn_7.25.11_amd64.deb
 aria-vpn
 ```
 
@@ -71,7 +71,7 @@ dotnet build v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
 dotnet run --project v2rayN/v2rayN.Tests/AriaVPN.Tests.csproj -c Release
 
 # build the .deb (cores are taken from a local directory)
-./package-aria-vpn.sh 7.25.10 --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.11 --cores /opt/AriaVPN/bin
 ```
 
 The cores directory must have the layout of the official v2rayN release
