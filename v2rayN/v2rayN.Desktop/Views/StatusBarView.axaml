@@ -20,8 +20,11 @@
                 VerticalAlignment="Center"
                 DockPanel.Dock="Right">
                 <TextBlock x:Name="txtSpeedProxyDisplay" HorizontalAlignment="Right" />
-                <Border Margin="1" />
-                <TextBlock x:Name="txtSpeedDirectDisplay" HorizontalAlignment="Right" />
+                <Border Margin="1" IsVisible="{Binding !EnableTun}" />
+                <TextBlock
+                    x:Name="txtSpeedDirectDisplay"
+                    HorizontalAlignment="Right"
+                    IsVisible="{Binding !EnableTun}" />
             </StackPanel>
 
             <StackPanel
@@ -34,9 +37,31 @@
                     x:Name="spEnableTun"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+                    <Border
+                        x:Name="bdTunActive"
+                        Margin="0,0,6,0"
+                        Padding="8,2"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource SemiColorPrimaryLight}"
+                        CornerRadius="8"
+                        IsVisible="{Binding EnableTun}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse
+                                Width="6"
+                                Height="6"
+                                VerticalAlignment="Center"
+                                Fill="{DynamicResource SemiColorSuccess}" />
+                            <TextBlock
+                                FontSize="11"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource SemiColorPrimary}"
+                                Text="TUN" />
+                        </StackPanel>
+                    </Border>
                     <TextBlock
                         Margin="0,0,6,0"
                         VerticalAlignment="Center"
+                        IsVisible="{Binding !EnableTun}"
                         Text="{x:Static resx:ResUI.TbEnableTunAs}" />
                     <ToggleSwitch
                         x:Name="togEnableTun"
@@ -47,6 +72,7 @@
                 <ComboBox
                     x:Name="cmbSystemProxy"
                     Width="140"
+                    IsVisible="{Binding !EnableTun}"
                     ToolTip.Tip="{x:Static resx:ResUI.menuSystemproxy}">
                     <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyClear}" />
                     <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxySet}" />
