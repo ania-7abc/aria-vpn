@@ -26,15 +26,15 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
 cd v2rayN
 dotnet build v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
 
-# unit tests of the selection logic (11 scenarios)
+# self-tests: selection logic, theme catalog, palette hierarchy
 dotnet run --project v2rayN.Tests/AriaVPN.Tests.csproj -c Release
 
 # publish + build the .deb
 cd ..
-./package-aria-vpn.sh 7.25.12 --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.13 --cores /opt/AriaVPN/bin
 
 # rebuild only the .deb from the existing publish output
-./package-aria-vpn.sh 7.25.12 --no-publish --cores /opt/AriaVPN/bin
+./package-aria-vpn.sh 7.25.13 --no-publish --cores /opt/AriaVPN/bin
 ```
 
 ## Auto selection
@@ -177,16 +177,21 @@ because those cases rewrite or replace the generated config.
   `Theme="{DynamicResource CardBorder}"` in new views.
 * Borders are reserved for window frames. The main window and dialogs keep the
   system frame; their content is built from borderless cards.
-* Themes live in `ETheme` and are mapped in
-  `Views/ThemeSettingViewModel.ModifyTheme()`. The custom `Aria`, `Midnight` and
-  `Graphite` variants are declared in `Common/AriaTheme.cs`; their palette
-  overrides are in the `ThemeDictionaries` of `App.axaml`.
+* Themes live in `ETheme`. Canonical names, legacy aliases and the System
+  variants are handled by `ServiceLib/Common/ThemeCatalog.cs`, then mapped to
+  Avalonia variants in `Views/ThemeSettingViewModel.ModifyTheme()`. The custom
+  `AriaLight`, `AriaDark`, `ContrastLight` and `ContrastDark` variants are
+  declared in `Common/AriaTheme.cs`; their palette overrides are in the
+  `ThemeDictionaries` of `App.axaml`.
 
 ## Testing
 
-* `v2rayN.Tests` — 11 scenarios of `SelectBestServer`: strategies, unreachable
-  servers, a 0 ms server, `MaxDelay`, `OnlySwitchIfBetter`, the improvement
-  threshold, the continuous mode and the "switched" flag.
+* `v2rayN.Tests` — `AutoSelectTests` cover the `SelectBestServer` strategies,
+  unreachable servers, a 0 ms server, `MaxDelay`, `OnlySwitchIfBetter`, the
+  improvement threshold, the continuous mode and the "switched" flag.
+  `ThemeCatalogTests` cover canonical names, legacy aliases and System-theme
+  resolution. `ThemePaletteTests` guard the background hierarchy, text contrast
+  and Contrast-theme borders in `App.axaml`.
 * Integration test in the real GUI: three profiles (two live TCP listeners and
   one dead port), TCP ping, `LeastPing`. Expected log line:
 

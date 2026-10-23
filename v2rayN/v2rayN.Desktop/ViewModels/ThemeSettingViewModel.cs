@@ -38,7 +38,7 @@ public partial class ThemeSettingViewModel : MyReactiveObject
 
     private void OnPlatformColorValuesChanged(object? sender, PlatformColorValues e)
     {
-        if (CurrentTheme is nameof(ETheme.AriaSystem) or nameof(ETheme.ContrastSystem))
+        if (ThemeCatalog.IsSystemTheme(CurrentTheme))
         {
             Dispatcher.UIThread.Post(ModifyTheme);
         }
@@ -46,23 +46,14 @@ public partial class ThemeSettingViewModel : MyReactiveObject
 
     private void NormalizeTheme()
     {
-        var theme = _config.UiItem.CurrentTheme;
-        var normalized = theme switch
+        var normalized = ThemeCatalog.Normalize(_config.UiItem.CurrentTheme);
+        if (string.Equals(_config.UiItem.CurrentTheme, normalized, StringComparison.Ordinal))
         {
-            nameof(ETheme.FollowSystem) or nameof(ETheme.Dark) or nameof(ETheme.Light)
-                or nameof(ETheme.AriaSystem) or nameof(ETheme.AriaLight) or nameof(ETheme.AriaDark)
-                or nameof(ETheme.ContrastSystem) or nameof(ETheme.ContrastLight) or nameof(ETheme.ContrastDark) => theme,
-            "Aria" => nameof(ETheme.AriaLight),
-            "Midnight" => nameof(ETheme.AriaDark),
-            "Graphite" => nameof(ETheme.ContrastDark),
-            _ => nameof(ETheme.AriaSystem),
-        };
-
-        if (!string.Equals(_config.UiItem.CurrentTheme, normalized, StringComparison.Ordinal))
-        {
-            _config.UiItem.CurrentTheme = normalized;
-            _ = ConfigHandler.SaveConfig(_config);
+            return;
         }
+
+        _config.UiItem.CurrentTheme = normalized;
+        _ = ConfigHandler.SaveConfig(_config);
     }
 
     private void RestoreUI()
@@ -119,27 +110,26 @@ public partial class ThemeSettingViewModel : MyReactiveObject
     private void ModifyTheme()
     {
         var app = Application.Current;
-        if (app is not null)
+        if (app is null)
         {
-            var isDark = IsDarkSystemTheme();
-            app.RequestedThemeVariant = CurrentTheme switch
-            {
-                nameof(ETheme.FollowSystem) => ThemeVariant.Default,
-                nameof(ETheme.Dark) => ThemeVariant.Dark,
-                nameof(ETheme.Light) => ThemeVariant.Light,
-                nameof(ETheme.Aquatic) => SemiTheme.Aquatic,
-                nameof(ETheme.Desert) => SemiTheme.Desert,
-                nameof(ETheme.Dusk) => SemiTheme.Dusk,
-                nameof(ETheme.NightSky) => SemiTheme.NightSky,
-                nameof(ETheme.AriaSystem) => isDark ? AriaTheme.AriaDark : AriaTheme.AriaLight,
-                nameof(ETheme.AriaLight) => AriaTheme.AriaLight,
-                nameof(ETheme.AriaDark) => AriaTheme.AriaDark,
-                nameof(ETheme.ContrastSystem) => isDark ? AriaTheme.ContrastDark : AriaTheme.ContrastLight,
-                nameof(ETheme.ContrastLight) => AriaTheme.ContrastLight,
-                nameof(ETheme.ContrastDark) => AriaTheme.ContrastDark,
-                _ => ThemeVariant.Default,
-            };
+            return;
         }
+
+        var theme = ThemeCatalog.ResolveSystemTheme(CurrentTheme, IsDarkSystemTheme());
+        app.RequestedThemeVariant = theme switch
+        {
+            nameof(ETheme.Dark) => ThemeVariant.Dark,
+            nameof(ETheme.Light) => ThemeVariant.Light,
+            nameof(ETheme.Aquatic) => SemiTheme.Aquatic,
+            nameof(ETheme.Desert) => SemiTheme.Desert,
+            nameof(ETheme.Dusk) => SemiTheme.Dusk,
+            nameof(ETheme.NightSky) => SemiTheme.NightSky,
+            nameof(ETheme.AriaLight) => AriaTheme.AriaLight,
+            nameof(ETheme.AriaDark) => AriaTheme.AriaDark,
+            nameof(ETheme.ContrastLight) => AriaTheme.ContrastLight,
+            nameof(ETheme.ContrastDark) => AriaTheme.ContrastDark,
+            _ => ThemeVariant.Default,
+        };
     }
 
     private void ModifyFontSize()
