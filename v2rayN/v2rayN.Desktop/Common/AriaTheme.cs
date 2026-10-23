@@ -3,8 +3,8 @@ using Avalonia.Styling;
 namespace v2rayN.Desktop.Common;
 
 /// <summary>
-/// Custom AriaVPN color variants. They inherit the Semi light/dark resources and
-/// only override the surface, text and accent tokens.
+/// Custom AriaVPN color variants. Aria variants only override the accent tokens,
+/// while Contrast variants also redefine surfaces, text and borders.
 /// </summary>
 public static class AriaTheme
 {
