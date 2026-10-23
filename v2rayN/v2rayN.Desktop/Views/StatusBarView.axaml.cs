@@ -23,7 +23,6 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
             this.OneWayBind(ViewModel, vm => vm.RunningInfoDisplay, v => v.txtRunningInfoDisplay.Text).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.SpeedProxyDisplay, v => v.txtSpeedProxyDisplay.Text).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.SpeedDirectDisplay, v => v.txtSpeedDirectDisplay.Text).DisposeWith(disposables);
-            this.Bind(ViewModel, vm => vm.EnableTun, v => v.togEnableTun.IsChecked).DisposeWith(disposables);
 
             this.Bind(ViewModel, vm => vm.SystemProxySelected, v => v.cmbSystemProxy.SelectedIndex).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.SelectedRouting, v => v.cmbRoutings2.SelectedItem).DisposeWith(disposables);
@@ -59,6 +58,14 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
         RefreshIcon();
     }
 
+    private void BtnTun_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel is not null)
+        {
+            ViewModel.EnableTun = !ViewModel.EnableTun;
+        }
+    }
+
     private void RefreshIcon()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -78,7 +85,7 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
         var password = obj?.ToString();
         if (password.IsNullOrEmpty())
         {
-            togEnableTun.IsChecked = false;
+            ViewModel.EnableTun = false;
             return password;
         }
 

@@ -24,6 +24,14 @@
         <Setter Property="Padding" Value="14" />
     </Style>
 
+    <!--  Docked log/activity panel.  -->
+    <Style Selector="Border.logCard">
+        <Setter Property="Background" Value="{DynamicResource SemiColorBackground1}" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
     <!--  Window-like frames keep a thin outline.  -->
     <Style Selector="Border.windowCard">
         <Setter Property="Background" Value="{DynamicResource SemiColorBackground0}" />

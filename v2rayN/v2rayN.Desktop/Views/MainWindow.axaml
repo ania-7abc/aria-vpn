@@ -26,6 +26,17 @@
         <Style Selector="TabControl.logPane /template/ Border#PART_BorderSeparator">
             <Setter Property="IsVisible" Value="{Binding ShowClashUI}" />
         </Style>
+        <Style Selector="TabControl.logPane">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="TabControl.logPane > TabItem">
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
     </Window.Styles>
     <dialogHost:DialogHost CloseOnClickAway="True" DisableOpeningAnimation="True">
         <DockPanel>
@@ -155,15 +166,19 @@
                     IsVisible="False">
                     <ContentControl x:Name="tabProfiles" Grid.Column="0" />
                     <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-                    <TabControl
-                        x:Name="tabMain"
+                    <Border
                         Grid.Column="2"
-                        Classes="logPane"
-                        HorizontalContentAlignment="Left">
-                        <TabItem x:Name="tabMsgView" Header="{x:Static resx:ResUI.MsgInformationTitle}" />
-                        <TabItem x:Name="tabClashProxies" Header="{x:Static resx:ResUI.TbProxies}" />
-                        <TabItem x:Name="tabClashConnections" Header="{x:Static resx:ResUI.TbConnections}" />
-                    </TabControl>
+                        Margin="8,0,8,8"
+                        Classes="logCard">
+                        <TabControl
+                            x:Name="tabMain"
+                            Classes="logPane"
+                            HorizontalContentAlignment="Left">
+                            <TabItem x:Name="tabMsgView" Header="{x:Static resx:ResUI.MsgInformationTitle}" />
+                            <TabItem x:Name="tabClashProxies" Header="{x:Static resx:ResUI.TbProxies}" />
+                            <TabItem x:Name="tabClashConnections" Header="{x:Static resx:ResUI.TbConnections}" />
+                        </TabControl>
+                    </Border>
                 </Grid>
                 <Grid
                     x:Name="gridMain1"
@@ -171,15 +186,18 @@
                     RowDefinitions="1*,10,1*">
                     <ContentControl x:Name="tabProfiles1" Grid.Row="0" />
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
-                    <TabControl
-                        x:Name="tabMain1"
+                    <Border
                         Grid.Row="2"
-                        Classes="logPane"
-                        TabStripPlacement="Left">
-                        <TabItem x:Name="tabMsgView1" Header="{x:Static resx:ResUI.MsgInformationTitle}" />
-                        <TabItem x:Name="tabClashProxies1" Header="{x:Static resx:ResUI.TbProxies}" />
-                        <TabItem x:Name="tabClashConnections1" Header="{x:Static resx:ResUI.TbConnections}" />
-                    </TabControl>
+                        Margin="8,0,8,8"
+                        Classes="logCard">
+                        <TabControl
+                            x:Name="tabMain1"
+                            Classes="logPane">
+                            <TabItem x:Name="tabMsgView1" Header="{x:Static resx:ResUI.MsgInformationTitle}" />
+                            <TabItem x:Name="tabClashProxies1" Header="{x:Static resx:ResUI.TbProxies}" />
+                            <TabItem x:Name="tabClashConnections1" Header="{x:Static resx:ResUI.TbConnections}" />
+                        </TabControl>
+                    </Border>
                 </Grid>
                 <Grid x:Name="gridMain2" IsVisible="False">
                     <TabControl x:Name="tabMain2" TabStripPlacement="Left">
