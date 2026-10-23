@@ -1428,8 +1428,23 @@
   <data name="TbRuleOutboundTagTip" xml:space="preserve">
     <value>Can fill in the configuration remarks, please make sure it exist and are unique</value>
   </data>
+  <data name="SudoDialogDescription" xml:space="preserve">
+    <value>AriaVPN needs sudo permission to enable TUN mode. The password is used for this session only and is not stored.</value>
+  </data>
+  <data name="SudoDialogPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SudoDialogTitle" xml:space="preserve">
+    <value>Administrator access</value>
+  </data>
+  <data name="SudoDialogUnlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
   <data name="SudoIncorrectPasswordTip" xml:space="preserve">
     <value>Incorrect password, please try again.</value>
+  </data>
+  <data name="SudoPasswordRequired" xml:space="preserve">
+    <value>Enter the sudo password.</value>
   </data>
   <data name="TbMldsa65Verify" xml:space="preserve">
     <value>Mldsa65Verify</value>

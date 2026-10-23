@@ -13,6 +13,7 @@ public partial class StatusBarViewModel : MyReactiveObject
 
     public EventChannel<string> SetDefaultServerRequested { get; } = new();
     public EventChannel<RxVoid> ReloadRequested { get; } = new();
+    public EventChannel<RxVoid> AutoSelectSettingsRequested { get; } = new();
     public EventChannel<RxVoid> AddServerViaScanRequested { get; } = new();
     public EventChannel<RxVoid> AddServerViaClipboardRequested { get; } = new();
 
@@ -55,6 +56,8 @@ public partial class StatusBarViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> NotifyLeftClickCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> ShowWindowCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> HideWindowCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> OpenAutoSelectSettingsCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> ReloadCmd { get; }
 
     #region System Proxy
 
@@ -221,6 +224,17 @@ public partial class StatusBarViewModel : MyReactiveObject
         SelectBestServerCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await AutoSelectService.Instance.RunAsync(true);
+        });
+        OpenAutoSelectSettingsCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            AutoSelectSettingsRequested.Publish(RxVoid.Default);
+            await Task.CompletedTask;
+        });
+
+        ReloadCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            ReloadRequested.Publish();
+            await Task.CompletedTask;
         });
 
         //System proxy

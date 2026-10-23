@@ -18,8 +18,35 @@ public partial class ThemeSettingViewModel : MyReactiveObject
     {
         _config = AppManager.Instance.Config;
 
+        NormalizeTheme();
         BindingUI();
         RestoreUI();
+    }
+
+    private static bool IsDarkSystemTheme()
+    {
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+    }
+
+    private void NormalizeTheme()
+    {
+        var theme = _config.UiItem.CurrentTheme;
+        var normalized = theme switch
+        {
+            nameof(ETheme.Light) or nameof(ETheme.Dark)
+                or nameof(ETheme.AriaLight) or nameof(ETheme.AriaDark)
+                or nameof(ETheme.ContrastLight) or nameof(ETheme.ContrastDark) => theme,
+            "Aria" => nameof(ETheme.AriaLight),
+            "Midnight" => nameof(ETheme.AriaDark),
+            "Graphite" => nameof(ETheme.ContrastDark),
+            _ => IsDarkSystemTheme() ? nameof(ETheme.AriaDark) : nameof(ETheme.AriaLight),
+        };
+
+        if (!string.Equals(_config.UiItem.CurrentTheme, normalized, StringComparison.Ordinal))
+        {
+            _config.UiItem.CurrentTheme = normalized;
+            _ = ConfigHandler.SaveConfig(_config);
+        }
     }
 
     private void RestoreUI()
@@ -86,9 +113,10 @@ public partial class ThemeSettingViewModel : MyReactiveObject
                 nameof(ETheme.Desert) => SemiTheme.Desert,
                 nameof(ETheme.Dusk) => SemiTheme.Dusk,
                 nameof(ETheme.NightSky) => SemiTheme.NightSky,
-                nameof(ETheme.Aria) => AriaTheme.Light,
-                nameof(ETheme.Midnight) => AriaTheme.Midnight,
-                nameof(ETheme.Graphite) => AriaTheme.Graphite,
+                nameof(ETheme.AriaLight) => AriaTheme.AriaLight,
+                nameof(ETheme.AriaDark) => AriaTheme.AriaDark,
+                nameof(ETheme.ContrastLight) => AriaTheme.ContrastLight,
+                nameof(ETheme.ContrastDark) => AriaTheme.ContrastDark,
                 _ => ThemeVariant.Default,
             };
 

@@ -16,16 +16,16 @@
                 <ResourceInclude Source="Assets/GlobalResources.axaml" />
             </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="{x:Static common:AriaTheme.Light}">
-                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#F3F4F8" />
+                <ResourceDictionary x:Key="{x:Static common:AriaTheme.AriaLight}">
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#F4F5FA" />
                     <SolidColorBrush x:Key="SemiColorBackground1" Color="#FFFFFF" />
-                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#ECEEF4" />
-                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#E3E6EE" />
-                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#D9DDE7" />
-                    <SolidColorBrush x:Key="SemiColorFill0" Color="#F4F5F9" />
-                    <SolidColorBrush x:Key="SemiColorFill1" Color="#EAECF3" />
-                    <SolidColorBrush x:Key="SemiColorFill2" Color="#E0E3EC" />
-                    <SolidColorBrush x:Key="SemiColorBorder" Color="#DCE0E9" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#ECEFF8" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#E3E7F2" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#D8DDEB" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#F5F6FB" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#EBEEF7" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#E1E5F1" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#D7DCEA" />
                     <SolidColorBrush x:Key="SemiColorPrimary" Color="#5B5BD6" />
                     <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#6F6FE2" />
                     <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#4A4AC4" />
@@ -33,54 +33,78 @@
                     <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#ECECFB" />
                     <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#E1E1F9" />
                     <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#D5D5F6" />
-                    <SolidColorBrush x:Key="SemiColorText0" Color="#15161A" />
-                    <SolidColorBrush x:Key="SemiColorText1" Color="#3A3C45" />
-                    <SolidColorBrush x:Key="SemiColorText2" Color="#6A6D79" />
-                    <SolidColorBrush x:Key="SemiColorText3" Color="#9A9DA9" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#14151A" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#3A3C47" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#686B7A" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#969AA8" />
                 </ResourceDictionary>
-                <ResourceDictionary x:Key="{x:Static common:AriaTheme.Midnight}">
-                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#0A1020" />
-                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#101A2C" />
-                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#16233A" />
-                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#1C2C48" />
-                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#233655" />
-                    <SolidColorBrush x:Key="SemiColorFill0" Color="#141F35" />
-                    <SolidColorBrush x:Key="SemiColorFill1" Color="#1A2943" />
-                    <SolidColorBrush x:Key="SemiColorFill2" Color="#213351" />
-                    <SolidColorBrush x:Key="SemiColorBorder" Color="#263758" />
-                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#38BDF8" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#5FCBFB" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#0EA5E9" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#1E4A63" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#11324A" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#163E5C" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#1B4A6E" />
-                    <SolidColorBrush x:Key="SemiColorText0" Color="#F0F7FF" />
-                    <SolidColorBrush x:Key="SemiColorText1" Color="#CAD9EA" />
-                    <SolidColorBrush x:Key="SemiColorText2" Color="#93A9C2" />
-                    <SolidColorBrush x:Key="SemiColorText3" Color="#6A819C" />
+                <ResourceDictionary x:Key="{x:Static common:AriaTheme.AriaDark}">
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#0B1020" />
+                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#11182B" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#172038" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#1D2946" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#243354" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#141C30" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#1A2440" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#213052" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#2B3B60" />
+                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#6366F1" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#818CF8" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#4F46E5" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#343B66" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#1E2450" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#272E63" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#303878" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#F2F4FF" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#C9D0E8" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#929BBF" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#6D769B" />
                 </ResourceDictionary>
-                <ResourceDictionary x:Key="{x:Static common:AriaTheme.Graphite}">
-                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#121214" />
-                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#1A1A1D" />
-                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#222226" />
-                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#2A2A2F" />
-                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#333339" />
-                    <SolidColorBrush x:Key="SemiColorFill0" Color="#202024" />
-                    <SolidColorBrush x:Key="SemiColorFill1" Color="#28282D" />
-                    <SolidColorBrush x:Key="SemiColorFill2" Color="#303036" />
-                    <SolidColorBrush x:Key="SemiColorBorder" Color="#34343A" />
-                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#F59E0B" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#FBBF24" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#D97706" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#6B5316" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#3A2B0C" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#4A370F" />
-                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#5A4312" />
-                    <SolidColorBrush x:Key="SemiColorText0" Color="#F5F5F6" />
-                    <SolidColorBrush x:Key="SemiColorText1" Color="#D6D6DA" />
-                    <SolidColorBrush x:Key="SemiColorText2" Color="#A5A5AD" />
-                    <SolidColorBrush x:Key="SemiColorText3" Color="#77777F" />
+                <ResourceDictionary x:Key="{x:Static common:AriaTheme.ContrastLight}">
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#F1F1F1" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#E6E6E6" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#D9D9D9" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#F7F7F7" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#EDEDED" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#E0E0E0" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#A6A6A6" />
+                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#0047FF" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#1A5CFF" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#0033B3" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#B3C2E6" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#E5ECFF" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#D6E0FF" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#C2D1FF" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#000000" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#1A1A1A" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#333333" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#595959" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="{x:Static common:AriaTheme.ContrastDark}">
+                    <SolidColorBrush x:Key="SemiColorBackground0" Color="#000000" />
+                    <SolidColorBrush x:Key="SemiColorBackground1" Color="#0A0A0A" />
+                    <SolidColorBrush x:Key="SemiColorBackground2" Color="#161616" />
+                    <SolidColorBrush x:Key="SemiColorBackground3" Color="#222222" />
+                    <SolidColorBrush x:Key="SemiColorBackground4" Color="#2E2E2E" />
+                    <SolidColorBrush x:Key="SemiColorFill0" Color="#101010" />
+                    <SolidColorBrush x:Key="SemiColorFill1" Color="#1A1A1A" />
+                    <SolidColorBrush x:Key="SemiColorFill2" Color="#262626" />
+                    <SolidColorBrush x:Key="SemiColorBorder" Color="#6B6B6B" />
+                    <SolidColorBrush x:Key="SemiColorPrimary" Color="#FFD60A" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryPointerover" Color="#FFE14D" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryActive" Color="#E6B800" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryDisabled" Color="#665600" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLight" Color="#332B00" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightPointerover" Color="#443A00" />
+                    <SolidColorBrush x:Key="SemiColorPrimaryLightActive" Color="#554900" />
+                    <SolidColorBrush x:Key="SemiColorText0" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="SemiColorText1" Color="#EDEDED" />
+                    <SolidColorBrush x:Key="SemiColorText2" Color="#C7C7C7" />
+                    <SolidColorBrush x:Key="SemiColorText3" Color="#9C9C9C" />
+                    <SolidColorBrush x:Key="ButtonSolidForeground" Color="#0A0A0A" />
+                    <SolidColorBrush x:Key="ButtonSolidPrimaryPressedForeground" Color="#0A0A0A" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -110,14 +134,10 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem
-                            Command="{Binding ShowWindowCmd}"
-                            Header="{x:Static resx:ResUI.TbDisplayGUI}"
-                            IsVisible="{Binding BlIsNonWindows}" />
-                        <NativeMenuItem
-                            Command="{Binding NotifyLeftClickCmd}"
-                            Header="{x:Static resx:ResUI.menuShowOrHideMainWindow}"
-                            IsVisible="{Binding BlIsNonWindows}" />
-                        <NativeMenuItem Command="{Binding CopyProxyCmdToClipboardCmd}" Header="{x:Static resx:ResUI.menuCopyProxyCmdToClipboard}" />
+                            Header="{Binding RunningServerDisplay}"
+                            IsEnabled="False" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Command="{Binding NotifyLeftClickCmd}" Header="{x:Static resx:ResUI.menuShowOrHideMainWindow}" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem
                             Command="{Binding ToggleAutoSelectCmd}"
@@ -130,6 +150,7 @@
                             IsChecked="{Binding BlAutoSelectContinuous}"
                             ToggleType="CheckBox" />
                         <NativeMenuItem Command="{Binding SelectBestServerCmd}" Header="{x:Static resx:ResUI.AutoSelectMenuBestNow}" />
+                        <NativeMenuItem Command="{Binding OpenAutoSelectSettingsCmd}" Header="{x:Static resx:ResUI.AutoSelectMenu}" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem
                             Command="{Binding SystemProxyClearCmd}"
@@ -153,10 +174,12 @@
                             IsVisible="{Binding BlSystemProxyPacVisible}"
                             ToggleType="Radio" />
                         <NativeMenuItemSeparator />
+                        <NativeMenuItem Command="{Binding CopyProxyCmdToClipboardCmd}" Header="{x:Static resx:ResUI.menuCopyProxyCmdToClipboard}" />
                         <NativeMenuItem Click="MenuAddServerViaClipboardClick" Header="{x:Static resx:ResUI.menuAddServerViaClipboard}" />
                         <NativeMenuItem Command="{Binding SubUpdateCmd}" Header="{x:Static resx:ResUI.menuSubUpdate}" />
                         <NativeMenuItem Command="{Binding SubUpdateViaProxyCmd}" Header="{x:Static resx:ResUI.menuSubUpdateViaProxy}" />
                         <NativeMenuItemSeparator />
+                        <NativeMenuItem Command="{Binding ReloadCmd}" Header="{x:Static resx:ResUI.menuReload}" />
                         <NativeMenuItem Click="MenuExit_Click" Header="{x:Static resx:ResUI.menuExit}" />
                     </NativeMenu>
                 </TrayIcon.Menu>

@@ -8,12 +8,26 @@ namespace v2rayN.Desktop.Views;
 /// </summary>
 public partial class ThemeSettingView : ReactiveUserControl<ThemeSettingViewModel>
 {
+    private sealed record ThemeOption(string Value, string Display);
+
+    private static readonly IReadOnlyList<ThemeOption> ThemeOptions =
+    [
+        new(nameof(ETheme.Dark), "Dark"),
+        new(nameof(ETheme.Light), "Light"),
+        new(nameof(ETheme.AriaDark), "Aria Dark"),
+        new(nameof(ETheme.AriaLight), "Aria Light"),
+        new(nameof(ETheme.ContrastDark), "Contrast Dark"),
+        new(nameof(ETheme.ContrastLight), "Contrast Light"),
+    ];
+
     public ThemeSettingView()
     {
         InitializeComponent();
         ViewModel = new ThemeSettingViewModel();
 
-        cmbCurrentTheme.ItemsSource = Utils.GetEnumNames<ETheme>();
+        cmbCurrentTheme.ItemsSource = ThemeOptions;
+        cmbCurrentTheme.DisplayMemberBinding = new Binding(nameof(ThemeOption.Display));
+        cmbCurrentTheme.SelectedValueBinding = new Binding(nameof(ThemeOption.Value));
         cmbCurrentFontSize.ItemsSource = Enumerable.Range(Global.MinFontSize, Global.MinFontSizeCount).ToList();
         cmbCurrentLanguage.ItemsSource = Global.LanguageOptions;
         cmbCurrentLanguage.DisplayMemberBinding = new Binding(nameof(LanguageOption.Display));

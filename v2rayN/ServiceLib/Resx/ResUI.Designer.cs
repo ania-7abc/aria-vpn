@@ -2743,6 +2743,42 @@ namespace ServiceLib.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AriaVPN needs sudo permission to enable TUN mode. The password is used for this session only and is not stored..
+        /// </summary>
+        public static string SudoDialogDescription {
+            get {
+                return ResourceManager.GetString("SudoDialogDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string SudoDialogPassword {
+            get {
+                return ResourceManager.GetString("SudoDialogPassword", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Administrator access.
+        /// </summary>
+        public static string SudoDialogTitle {
+            get {
+                return ResourceManager.GetString("SudoDialogTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock.
+        /// </summary>
+        public static string SudoDialogUnlock {
+            get {
+                return ResourceManager.GetString("SudoDialogUnlock", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Incorrect password, please try again..
         /// </summary>
         public static string SudoIncorrectPasswordTip {
@@ -2750,7 +2786,16 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("SudoIncorrectPasswordTip", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the sudo password..
+        /// </summary>
+        public static string SudoPasswordRequired {
+            get {
+                return ResourceManager.GetString("SudoPasswordRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Add Common DNS Hosts.
         /// </summary>

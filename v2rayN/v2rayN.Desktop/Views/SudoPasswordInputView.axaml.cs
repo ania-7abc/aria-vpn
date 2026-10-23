@@ -11,6 +11,8 @@ public partial class SudoPasswordInputView : UserControl
 
         Loaded += (s, e) => txtPassword.Focus();
 
+        txtPassword.TextChanged += (_, _) => HideError();
+
         btnSave.Click += async (_, _) => await SavePasswordAsync();
 
         btnCancel.Click += (_, _) =>
@@ -19,15 +21,28 @@ public partial class SudoPasswordInputView : UserControl
         };
     }
 
+    private void ShowError(string message)
+    {
+        txtError.Text = message;
+        txtError.IsVisible = true;
+    }
+
+    private void HideError()
+    {
+        txtError.IsVisible = false;
+    }
+
     private async Task SavePasswordAsync()
     {
         if (txtPassword.Text.IsNullOrEmpty())
         {
+            ShowError(ResUI.SudoPasswordRequired);
             txtPassword.Focus();
             return;
         }
 
         var password = txtPassword.Text;
+        HideError();
         btnSave.IsEnabled = false;
 
         try
@@ -43,8 +58,9 @@ public partial class SudoPasswordInputView : UserControl
             }
             else
             {
-                // Password verification failed, display error and let user try again
-                NoticeManager.Instance.Enqueue(ResUI.SudoIncorrectPasswordTip);
+                // Password verification failed, display inline error and let user try again
+                ShowError(ResUI.SudoIncorrectPasswordTip);
+                txtPassword.SelectAll();
                 txtPassword.Focus();
             }
         }

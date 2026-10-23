@@ -14,7 +14,7 @@
     MinWidth="980"
     x:DataType="vms:MainWindowViewModel"
     Design.DataContext="{x:Static dd:DesignData.MainWindow}"
-    Icon="/Assets/NotifyIcon1.ico"
+    Icon="/Assets/AriaVPN.ico"
     ShowInTaskbar="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">

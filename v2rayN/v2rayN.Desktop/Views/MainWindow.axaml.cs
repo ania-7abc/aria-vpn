@@ -19,7 +19,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         InitializeComponent();
 
         _config = AppManager.Instance.Config;
-        _manager = new WindowNotificationManager(TopLevel.GetTopLevel(this)) { MaxItems = 3, Position = NotificationPosition.BottomRight };
+        _manager = new WindowNotificationManager(TopLevel.GetTopLevel(this))
+        {
+            MaxItems = 3,
+            Position = NotificationPosition.TopCenter
+        };
 
         KeyDown += MainWindow_KeyDown;
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;

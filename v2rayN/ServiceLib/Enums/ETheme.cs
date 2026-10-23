@@ -9,7 +9,8 @@ public enum ETheme
     Desert,
     Dusk,
     NightSky,
-    Aria,
-    Midnight,
-    Graphite
+    AriaLight,
+    AriaDark,
+    ContrastLight,
+    ContrastDark
 }

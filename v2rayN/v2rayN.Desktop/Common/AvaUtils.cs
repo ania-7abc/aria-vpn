@@ -39,16 +39,26 @@ internal class AvaUtils
         }
     }
 
-    public static WindowIcon GetAppIcon(ESysProxyType sysProxyType)
+    public static WindowIcon GetAppIcon()
+    {
+        return LoadIcon("AriaVPN.ico");
+    }
+
+    public static WindowIcon GetTrayIcon(ESysProxyType sysProxyType)
     {
         var index = (int)sysProxyType + 1;
-        var fileName = Utils.GetPath($"NotifyIcon{index}.ico");
-        if (File.Exists(fileName))
+        return LoadIcon($"NotifyIcon{index}.ico");
+    }
+
+    private static WindowIcon LoadIcon(string fileName)
+    {
+        var path = Utils.GetPath(fileName);
+        if (File.Exists(path))
         {
-            return new(fileName);
+            return new(path);
         }
 
-        var uri = new Uri(Path.Combine(Global.AvaAssets, $"NotifyIcon{index}.ico"));
+        var uri = new Uri(Path.Combine(Global.AvaAssets, fileName));
         using var bitmap = new Bitmap(AssetLoader.Open(uri));
         return new(bitmap);
     }
