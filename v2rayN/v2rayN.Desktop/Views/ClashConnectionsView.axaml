@@ -13,97 +13,101 @@
     Design.DataContext="{x:Static dd:DesignData.ClashConnections}"
     mc:Ignorable="d">
 
-    <DockPanel Margin="2">
-        <WrapPanel
-            Margin="{StaticResource Margin4}"
-            VerticalAlignment="Center"
-            DockPanel.Dock="Top"
-            Orientation="Horizontal">
+    <DockPanel Margin="4">
+        <Border
+            Margin="4,2,4,6"
+            Padding="6,4"
+            Classes="card"
+            DockPanel.Dock="Top">
+            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBox
+                    x:Name="txtHostFilter"
+                    Width="240"
+                    Margin="{StaticResource MarginLr8}"
+                    VerticalContentAlignment="Center"
+                    MinHeight="32"
+                    Watermark="{x:Static resx:ResUI.ConnectionsHostFilterTitle}" />
 
-            <TextBox
-                x:Name="txtHostFilter"
-                Width="200"
-                Margin="{StaticResource MarginLr8}"
-                VerticalContentAlignment="Center"
-                PlaceholderText="{x:Static resx:ResUI.ConnectionsHostFilterTitle}" />
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                    <Button
+                        x:Name="btnConnectionCloseAll"
+                        Classes="IconButton"
+                        ToolTip.Tip="{x:Static resx:ResUI.menuConnectionCloseAll}">
+                        <Button.Content>
+                            <PathIcon Data="{StaticResource SemiIconClose}" />
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        x:Name="btnAutofitColumnWidth"
+                        Classes="IconButton"
+                        ToolTip.Tip="{x:Static resx:ResUI.menuProfileAutofitColumnWidth}">
+                        <Button.Content>
+                            <PathIcon Data="{StaticResource SemiIconExpand}" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
 
-            <Button
-                x:Name="btnConnectionCloseAll"
-                Margin="{StaticResource MarginLr8}"
-                Classes="IconButton Success"
-                ToolTip.Tip="{x:Static resx:ResUI.menuConnectionCloseAll}">
-                <Button.Content>
-                    <PathIcon Data="{StaticResource SemiIconClose}" />
-                </Button.Content>
-            </Button>
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static resx:ResUI.TbAutoRefresh}" />
+                    <ToggleSwitch x:Name="togAutoRefresh" VerticalAlignment="Center" />
+                </StackPanel>
+            </WrapPanel>
+        </Border>
 
-            <Button
-                x:Name="btnAutofitColumnWidth"
-                Margin="{StaticResource MarginLr8}"
-                Classes="IconButton Success"
-                ToolTip.Tip="{x:Static resx:ResUI.menuProfileAutofitColumnWidth}">
-                <Button.Content>
-                    <PathIcon Data="{StaticResource SemiIconExpand}" />
-                </Button.Content>
-            </Button>
-
-            <TextBlock
-                Margin="{StaticResource MarginLr8}"
-                VerticalAlignment="Center"
-                Text="{x:Static resx:ResUI.TbAutoRefresh}" />
-            <ToggleSwitch
-                x:Name="togAutoRefresh"
-                Margin="{StaticResource MarginLr8}"
-                HorizontalAlignment="Left" />
-        </WrapPanel>
-
-        <DataGrid
-            x:Name="lstConnections"
-            AutoGenerateColumns="False"
-            BorderThickness="1"
-            CanUserResizeColumns="True"
-            GridLinesVisibility="All"
-            HeadersVisibility="Column"
-            IsReadOnly="True"
-            ItemsSource="{Binding ConnectionItems}">
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="menuConnectionClose" Header="{x:Static resx:ResUI.menuConnectionClose}" />
-                    <MenuItem x:Name="menuConnectionCloseAll" Header="{x:Static resx:ResUI.menuConnectionCloseAll}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Width="300"
-                    Binding="{Binding Host}"
-                    Header="{x:Static resx:ResUI.TbSortingHost}"
-                    Tag="Host" />
-                <DataGridTextColumn
-                    Width="500"
-                    Binding="{Binding Chain}"
-                    Header="{x:Static resx:ResUI.TbSortingChain}"
-                    Tag="Chain" />
-                <DataGridTextColumn
-                    Width="80"
-                    Binding="{Binding Network}"
-                    Header="{x:Static resx:ResUI.TbSortingNetwork}"
-                    Tag="Network" />
-                <DataGridTextColumn
-                    Width="160"
-                    Binding="{Binding Type}"
-                    Header="{x:Static resx:ResUI.TbSortingType}"
-                    Tag="Type" />
-                <DataGridTextColumn
-                    Width="100"
-                    Binding="{Binding ProcessPath}"
-                    Header="{x:Static resx:ResUI.TbSortingProcess}"
-                    Tag="ProcessPath" />
-                <DataGridTextColumn
-                    Width="100"
-                    Binding="{Binding Elapsed}"
-                    Header="{x:Static resx:ResUI.TbSortingTime}"
-                    Tag="Elapsed" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <Border
+            Margin="4,0,4,4"
+            Padding="4"
+            Classes="card"
+            ClipToBounds="True">
+            <DataGrid
+                x:Name="lstConnections"
+                AutoGenerateColumns="False"
+                Background="Transparent"
+                BorderThickness="0"
+                CanUserResizeColumns="True"
+                GridLinesVisibility="Horizontal"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                ItemsSource="{Binding ConnectionItems}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="menuConnectionClose" Header="{x:Static resx:ResUI.menuConnectionClose}" />
+                        <MenuItem x:Name="menuConnectionCloseAll" Header="{x:Static resx:ResUI.menuConnectionCloseAll}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="320"
+                        Binding="{Binding Host}"
+                        Header="{x:Static resx:ResUI.TbSortingHost}"
+                        Tag="Host" />
+                    <DataGridTextColumn
+                        Width="520"
+                        Binding="{Binding Chain}"
+                        Header="{x:Static resx:ResUI.TbSortingChain}"
+                        Tag="Chain" />
+                    <DataGridTextColumn
+                        Width="90"
+                        Binding="{Binding Network}"
+                        Header="{x:Static resx:ResUI.TbSortingNetwork}"
+                        Tag="Network" />
+                    <DataGridTextColumn
+                        Width="170"
+                        Binding="{Binding Type}"
+                        Header="{x:Static resx:ResUI.TbSortingType}"
+                        Tag="Type" />
+                    <DataGridTextColumn
+                        Width="120"
+                        Binding="{Binding ProcessPath}"
+                        Header="{x:Static resx:ResUI.TbSortingProcess}"
+                        Tag="ProcessPath" />
+                    <DataGridTextColumn
+                        Width="110"
+                        Binding="{Binding Elapsed}"
+                        Header="{x:Static resx:ResUI.TbSortingTime}"
+                        Tag="Elapsed" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </DockPanel>
 </UserControl>

@@ -94,19 +94,20 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
 
         if (en)
         {
-            cmbSystemProxy.Opacity = 1;
+            cmbSystemProxy.IsVisible = true;
+            cmbSystemProxy.Opacity = 0;
             cmbSystemProxy.RenderTransform = null;
             cmbSystemProxy.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
 
             var anim = new Animation
             {
                 Duration = TimeSpan.FromMilliseconds(160),
-                Easing = new CubicEaseIn(),
+                Easing = new CubicEaseInOut(),
                 FillMode = FillMode.Forward,
                 Children =
                 {
-                    new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(OpacityProperty, 1.0) } },
-                    new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 0.0) } }
+                    new KeyFrame { Cue = new Cue(0d), Setters = { new Setter(OpacityProperty, 0.0) } },
+                    new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 1.0) } }
                 }
             };
             anim.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
@@ -121,15 +122,15 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
             return;
         }
 
+        cmbSystemProxy.IsVisible = true;
         cmbSystemProxy.Opacity = 0;
         cmbSystemProxy.RenderTransform = null;
         cmbSystemProxy.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
-        cmbSystemProxy.IsVisible = true;
 
         var animIn = new Animation
         {
             Duration = TimeSpan.FromMilliseconds(180),
-            Easing = new CubicEaseOut(),
+            Easing = new CubicEaseInOut(),
             FillMode = FillMode.Forward,
             Children =
             {
@@ -137,7 +138,14 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
                 new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(OpacityProperty, 1.0) } }
             }
         };
-        animIn.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() => _animatingProxy = false));
+        animIn.RunAsync(cmbSystemProxy).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
+        {
+            if (ViewModel?.EnableTun == false && cmbSystemProxy is not null)
+            {
+                cmbSystemProxy.Opacity = 1;
+            }
+            _animatingProxy = false;
+        }));
     }
 
     private void RefreshIcon()

@@ -17,144 +17,175 @@
         <conv:DelayColorConverter x:Key="DelayColorConverter" />
     </UserControl.Resources>
 
-    <DockPanel Margin="2">
-        <WrapPanel
-            Margin="{StaticResource Margin4}"
-            VerticalAlignment="Center"
-            DockPanel.Dock="Top"
-            Orientation="Horizontal">
+    <DockPanel Margin="4">
+        <Border
+            Margin="4,2,4,6"
+            Padding="6,4"
+            Classes="card"
+            DockPanel.Dock="Top">
+            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static resx:ResUI.menuRulemode}" />
+                    <ComboBox
+                        x:Name="cmbRulemode"
+                        Width="110"
+                        MinHeight="32">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
 
-            <TextBlock
-                Margin="{StaticResource MarginLr8}"
-                VerticalAlignment="Center"
-                Text="{x:Static resx:ResUI.menuRulemode}" />
-            <ComboBox
-                x:Name="cmbRulemode"
-                Width="100"
-                Margin="{StaticResource MarginLr8}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static resx:ResUI.TbSorting}" />
+                    <ComboBox
+                        x:Name="cmbSorting"
+                        Width="110"
+                        MinHeight="32">
+                        <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingDelay}" />
+                        <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingName}" />
+                        <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingDefault}" />
+                    </ComboBox>
+                </StackPanel>
 
-            <TextBlock
-                Margin="{StaticResource MarginLr8}"
-                VerticalAlignment="Center"
-                Text="{x:Static resx:ResUI.TbSorting}" />
-            <ComboBox
-                x:Name="cmbSorting"
-                Width="100"
-                Margin="{StaticResource MarginLr8}">
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingDelay}" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingName}" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbSortingDefault}" />
-            </ComboBox>
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                    <Button
+                        x:Name="menuProxiesReload"
+                        Classes="IconButton"
+                        ToolTip.Tip="{x:Static resx:ResUI.menuProxiesReload}">
+                        <Button.Content>
+                            <PathIcon Data="{StaticResource SemiIconRefresh}" />
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        x:Name="menuGroupProxiesDelaytest"
+                        Classes="IconButton"
+                        ToolTip.Tip="{x:Static resx:ResUI.menuDelaytest}">
+                        <Button.Content>
+                            <PathIcon Data="{StaticResource SemiIconBolt}" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
 
-            <Button
-                x:Name="menuProxiesReload"
-                Margin="{StaticResource MarginLr8}"
-                Classes="IconButton Success"
-                ToolTip.Tip="{x:Static resx:ResUI.menuProxiesReload}">
-                <Button.Content>
-                    <PathIcon Data="{StaticResource SemiIconRefresh}" />
-                </Button.Content>
-            </Button>
-
-            <Button
-                x:Name="menuGroupProxiesDelaytest"
-                Margin="{StaticResource MarginLr8}"
-                Classes="IconButton Success"
-                ToolTip.Tip="{x:Static resx:ResUI.menuDelaytest}">
-                <Button.Content>
-                    <PathIcon Data="{StaticResource SemiIconBolt}" />
-                </Button.Content>
-            </Button>
-
-            <TextBlock
-                Margin="{StaticResource MarginLr8}"
-                VerticalAlignment="Center"
-                Text="{x:Static resx:ResUI.TbAutoRefresh}" />
-            <ToggleSwitch
-                x:Name="togAutoRefresh"
-                Margin="{StaticResource MarginLr8}"
-                HorizontalAlignment="Left" />
-        </WrapPanel>
-        <DockPanel>
-            <ListBox
-                x:Name="lstProxyGroups"
-                DockPanel.Dock="Left"
-                ItemsSource="{Binding ProxyGroups}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Label
-                            Width="160"
-                            Margin="-4,-6"
-                            Padding="0"
-                            Theme="{DynamicResource TagLabel}">
-                            <Grid Margin="{StaticResource Margin4}" RowDefinitions="1*,8,1*">
-                                <DockPanel Grid.Row="0">
-                                    <TextBlock DockPanel.Dock="Right" Text="{Binding Type}" />
-                                    <TextBlock Text="{Binding Name}" />
-                                </DockPanel>
-                                <TextBlock Grid.Row="2" Text="{Binding Now}" />
-                            </Grid>
-                        </Label>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ListBox>
-
-            <ListBox x:Name="lstProxyDetails" ItemsSource="{Binding ProxyDetails}">
-                <ItemsControl.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="menuProxyDelaytest" Header="{x:Static resx:ResUI.menuDelaytest}" />
-                        <MenuItem
-                            x:Name="menuProxiesSelectActivity"
-                            Header="{x:Static resx:ResUI.menuProxiesSelectActivity}"
-                            InputGesture="Enter" />
-                    </ContextMenu>
-                </ItemsControl.ContextMenu>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Label
-                            Width="160"
-                            Margin="-10,-6"
-                            Padding="0"
-                            Theme="{DynamicResource TagLabel}">
-                            <DockPanel>
-                                <Border
-                                    Width="5"
-                                    Margin="0,1"
-                                    Background="YellowGreen"
-                                    CornerRadius="4"
-                                    DockPanel.Dock="Left"
-                                    IsVisible="{Binding IsActive}" />
-                                <Grid Margin="{StaticResource Margin4}" RowDefinitions="1*,8,1*">
-                                    <TextBlock Grid.Row="0" Text="{Binding Name}" />
-                                    <DockPanel Grid.Row="2">
+                <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static resx:ResUI.TbAutoRefresh}" />
+                    <ToggleSwitch x:Name="togAutoRefresh" VerticalAlignment="Center" />
+                </StackPanel>
+            </WrapPanel>
+        </Border>
+        <Grid ColumnDefinitions="200,*" Margin="4,0,4,4">
+            <Border
+                Grid.Column="0"
+                Margin="0,0,6,0"
+                Padding="4"
+                Classes="card"
+                ClipToBounds="True">
+                <ListBox
+                    x:Name="lstProxyGroups"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding ProxyGroups}"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="2" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="2"
+                                Padding="8,6"
+                                CornerRadius="10">
+                                <Grid RowDefinitions="Auto,Auto">
+                                    <DockPanel>
                                         <TextBlock
                                             DockPanel.Dock="Right"
-                                            Foreground="{Binding Path=Delay, Converter={StaticResource DelayColorConverter}}"
-                                            Text="{Binding DelayName}" />
-                                        <TextBlock Text="{Binding Type}" />
+                                            FontSize="11"
+                                            Foreground="{DynamicResource SemiColorText2}"
+                                            Text="{Binding Type}" />
+                                        <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Name}" />
                                     </DockPanel>
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Margin="0,2,0,0"
+                                        FontSize="11"
+                                        Foreground="{DynamicResource SemiColorText2}"
+                                        TextTrimming="CharacterEllipsis"
+                                        Text="{Binding Now}" />
                                 </Grid>
-                            </DockPanel>
-                        </Label>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ListBox>
-        </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <Border
+                Grid.Column="1"
+                Padding="6"
+                Classes="card"
+                ClipToBounds="True">
+                <ListBox
+                    x:Name="lstProxyDetails"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding ProxyDetails}"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ItemsControl.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="menuProxyDelaytest" Header="{x:Static resx:ResUI.menuDelaytest}" />
+                            <MenuItem
+                                x:Name="menuProxiesSelectActivity"
+                                Header="{x:Static resx:ResUI.menuProxiesSelectActivity}"
+                                InputGesture="Enter" />
+                        </ContextMenu>
+                    </ItemsControl.ContextMenu>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Width="190"
+                                Margin="4"
+                                Padding="10,8"
+                                CornerRadius="12">
+                                <DockPanel>
+                                    <Border
+                                        Width="4"
+                                        Margin="0,2,10,2"
+                                        Background="{DynamicResource SemiColorSuccess}"
+                                        CornerRadius="2"
+                                        DockPanel.Dock="Left"
+                                        IsVisible="{Binding IsActive}" />
+                                    <Grid RowDefinitions="Auto,Auto">
+                                        <TextBlock
+                                            TextTrimming="CharacterEllipsis"
+                                            ToolTip.Tip="{Binding Name}"
+                                            Text="{Binding Name}" />
+                                        <DockPanel Grid.Row="1" Margin="0,4,0,0">
+                                            <TextBlock
+                                                DockPanel.Dock="Right"
+                                                FontSize="11"
+                                                Foreground="{Binding Path=Delay, Converter={StaticResource DelayColorConverter}}"
+                                                Text="{Binding DelayName}" />
+                                            <TextBlock
+                                                FontSize="11"
+                                                Foreground="{DynamicResource SemiColorText2}"
+                                                TextTrimming="CharacterEllipsis"
+                                                Text="{Binding Type}" />
+                                        </DockPanel>
+                                    </Grid>
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </Border>
+        </Grid>
     </DockPanel>
 </UserControl>
